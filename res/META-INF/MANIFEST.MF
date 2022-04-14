@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+MIDlet-1: PanzerTactics srv,/icon.png,HG
+MIDlet-Icon: /icon.png
+MIDlet-Name: PanzerTactics srv
+MIDlet-Vendor: www.handy-games.com GmbH, serviak
+MIDlet-Version: 1.0
+MicroEdition-Configuration: CLDC-1.1
+MicroEdition-Profile: MIDP-2.0
+
