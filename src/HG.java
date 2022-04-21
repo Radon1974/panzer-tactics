@@ -909,7 +909,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
          }
       }
    }
-
+//Извлечение сообщений из библиотеки
    public static String H(int var0) {
       String var3 = "";
       int var2 = var0 & '\uffff';
@@ -2586,11 +2586,12 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
       int[] var7;
       int[] var9;
       
-      byte var13;
+      
+      //byte var13;
       switch(var0) {
       case 3:
-         for(var0 = 8; var0 <= 12; ++var0) {
-            A(var0, -1, 0, true);
+         for(int var14 = 8; var14 <= 12; ++var14) {
+            A(var14, -1, 0, true);
          }
 
          ra = 0;
@@ -2607,7 +2608,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
          sa[var0][10] = C.H(6)?101:190;
          break;
       case 25:
-         var13 = 0;
+         int var13 = 0;
          switch(C.ab) {
          case 0:
             var13 = 7;
@@ -2617,24 +2618,26 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
             break;
          case 2:
             var13 = 6;
+            break;
          }
 
          sa[var0][4] = var13;
          break;
       case 26:
-         var13 = 0;
+         int var18 = 0;
          switch(C.ab) {
          case 0:
-            var13 = 7;
+            var18 = 7;
             break;
          case 1:
-            var13 = 39;
+            var18 = 39;
             break;
          case 2:
-            var13 = 6;
+            var18 = 6;
+            break;
          }
 
-         sa[var0][4] = var13;
+         sa[var0][4] = var18;
       case 28:
          sa[var0][25] = C.lb[0];
          sa[var0][29] = C.lb[1];
@@ -2645,45 +2648,47 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
          break;
       case 29:
          fb = false;
-         var9 = null;
+         int[] var19;
+         var19 = null;
          if(C.fA != null) {
-            var9 = C.fA;
+            var19 = C.fA;
          } else if(C.dA != null) {
-            var9 = C.dA;
+            var19 = C.dA;
          }
 
-         sa[var0][0] = C.da[var9[0]][10];
-         sa[var0][4] = 393334 + C.da[var9[0]][4];
+         sa[var0][0] = C.da[var19[0]][10];
+         sa[var0][4] = 393334 + C.da[var19[0]][4];
          sa[var0][7] = -1;
          e[10] = -1;
          e[34] = -1;
          break;
       case 30:
          int[][] var8 = C.db == 0?C.ta:C.va;
-         var9 = sa[30] = new int[(var8.length + 2) * 4];
+         int[] var20;
+         var20 = sa[30] = new int[(var8.length + 2) * 4];
          if(var8.length > 0) {
             var1 = 8;
 
-            for(var0 = 0; var0 < var8.length; ++var0) {
-               if(var8[var0][14] == 1) {
-                  var9[var1++] = C.da[var8[var0][0]][10];
-                  if(var8[var0][13] >= 0) {
-                     var9[var1++] = 17;
+            for(int var21 = 0; var21 < var8.length; ++var21) {
+               if(var8[var21][14] == 1) {
+                  var20[var1++] = C.da[var8[var21][0]][10];
+                  if(var8[var21][13] >= 0) {
+                     var20[var1++] = 17;
                   } else {
-                     var9[var1++] = 15;
+                     var20[var1++] = 15;
                   }
 
-                  var9[var1++] = 120;
-                  var9[var1++] = var0;
+                  var20[var1++] = 120;
+                  var20[var1++] = var21;
                }
             }
          }
 
-         var9[0] = 393324;
-         var9[2] = 92;
-         var9[5] = 27;
-         var9[6] = 66;
-         var9[7] = 2;
+         var20[0] = 393324;
+         var20[2] = 92;
+         var20[5] = 27;
+         var20[6] = 66;
+         var20[7] = 2;
          break;
       case 31:
          var2 = 0;
@@ -2704,6 +2709,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
                   break;
                case 2:
                   var0 = C.da[var2][9];
+                  break;
                }
 
                if(var0 != -1 && C.bb >= var0) {
@@ -3439,11 +3445,11 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
 
       return var1;
    }
-
+//Извлечение текстовых сообщений из библиотеки
    static String D(int var0, int var1) {
       int[] var2 = sa[var0];
       var0 = var2[(var1 << 2) + 0];
-      String var3 = H(var0);
+      String var3 = H(var0);    //извлечение текстовых сообщений из библиотеки
       return var3;
    }
 
@@ -3736,6 +3742,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
          switch(var1) {
          case 102:
             ++var3;
+            break; //должен быть выход
          case 188:
          case 189:
          case 198:
@@ -3743,7 +3750,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
             ++var4;
             break;
          default:
-            rA[var2] = D(var0, var2);
+            rA[var2] = D(var0, var2);   //выводимые на экран сообщения
          }
 
          if(var1 > 99 && var1 < 150) {
@@ -3760,14 +3767,14 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
             uA = new byte[var3];
          }
 
-         var3 = 0;
+         int var10 = 0;
 
          for(var2 = 0; var2 < tA; ++var2) {
             var1 = var8[(var2 << 2) + 2];
             if(var1 == 102) {
                var1 = var8[(var2 << 2) + 1];
-               uA[var3] = U(var1);
-               ++var3;
+               uA[var10] = U(var1);
+               ++var10;
             }
          }
       }
@@ -3779,17 +3786,17 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
 
       int var7 = 0;
       int var6 = 0;
-
+      int var12 = 0;
       for(int var5 = 0; var5 < tA; ++var5) {    //загрузка сообщений
-         var4 = var8[(var5 << 2) + 2];
+         var12 = var8[(var5 << 2) + 2];
          boolean var10 = var5 == va;
-         var1 = 0;
+         int var11 = 0;
          String var9 = null;
          if(rA != null && rA[var5] != null) {
             var9 = rA[var5];
          }
 
-         switch(var4) {
+         switch(var12) {
          case 66:
             qA = H(var8[(var5 << 2) + 0]);
             mA = var8[(var5 << 2) + 1];
@@ -3801,21 +3808,22 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
             nA = var8[(var5 << 2) + 3];
             break;
          case 102:
-            var1 = var6++;
+            var11 = var6++;
             break;
          case 188:
          case 189:
          case 198:
             sA[var7] = A(D(var0, var5), C.i[2], dA - cA, 0);
-            var1 = var7++;
+            var11 = var7++;
             break;
          case 199:
-            var1 = var8[(var5 << 2) + 1];
-            sA[var7] = A(var1, C.i[2], dA - cA);
-            var1 = var7++;
+            var11 = var8[(var5 << 2) + 1];
+            sA[var7] = A(var11, C.i[2], dA - cA);
+            var11 = var7++;
+            break;
          }
 
-         pa += A((Graphics)null, var5, var4, var9, var1, 0, var10, var8[(var5 << 2) + 1], var8[(var5 << 2) + 3]);
+         pa += A((Graphics)null, var5, var12, var9, var11, 0, var10, var8[(var5 << 2) + 1], var8[(var5 << 2) + 3]);
       }
 
       eA -= A((Graphics)null);
@@ -5019,7 +5027,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
       }
 
    }
-
+//Всплывающее меню
    static void GA(int var0) {
       FA(gb);
       gb = var0;

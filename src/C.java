@@ -1,3 +1,14 @@
+//TODO: При старте сценария недоступен курсор при использовании мыши (только когда клавишами пользуешься)
+//TODO: Убрать гексы из нижней и верхней информационной панели (перемещение, сражение)
+//TODO: Модернизировать графику юнитов на графику Panzer General
+//TODO: Улучшить графику курсора при выводе на экран, а также графику гексового меню
+//TODO: Улучшить закраску черными прямоугольниками по краям карты
+//TODO: Исправить меню звука и убрать включить звук при старте игры
+//TODO: При перемещении курсора не выводится названия места (юнита) под гексом
+//TODO: Убрать юнитов другой нации из рекрутируемых подразделений
+//TODO: Перед началом миссии центрироваться на курсоре (вывести карту в центре курсора)
+//TODO: При сражении юниты смещаются вбок
+//INFO:
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
@@ -741,7 +752,10 @@ protected void pointerReleased(int var_x, int var_y) {
   int var_y2 = min_y;
   double dist; //расстояние между точкой и цетром окружности
   double e_dist = 1000; //минимальное расстояние между точкой и цетром окружности    
-
+//Выход из режима пауза
+if(c) {
+  c = false;  
+}  
 //Выбор гекса указания курсора
 if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2) {
  if(var_y >= 18 && var_y <= g - 34) {  //не реагировать на верхнюю и нижнюю информационную полоску 
@@ -921,7 +935,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
      if(o != 12 && o != 1 && j == null && (var_x >= HG.checkmark_x && var_x <= HG.checkmark_x + 20) && (var_y >= HG.checkmark_y && var_y <= HG.checkmark_y + 20)) { //нажат левый софт (подтверждение)
         u[18] = 20;
         v[18] = 0;
-        //HG.popup_menu = false;
+        HG.popup_menu = false;
      } else {
         k = 0L;
      }      
@@ -929,7 +943,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
      if(o != 12 && o != 1 && j == null && (var_x >= HG.cross_x && var_x <= HG.cross_x + 20) && (var_y >= HG.cross_y && var_y <= HG.cross_y + 20)) { //нажат правый софт (отмена)
         u[17] = 20;
         v[17] = 0;
-        //HG.popup_menu = false;
+        HG.popup_menu = false;
      } else {
         k = 0L;
      } 
