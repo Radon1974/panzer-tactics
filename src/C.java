@@ -1,14 +1,11 @@
 //TODO: При старте сценария недоступен курсор при использовании мыши (только когда клавишами пользуешься)
-//TODO: Убрать гексы из нижней и верхней информационной панели (перемещение, сражение)
 //TODO: Модернизировать графику юнитов на графику Panzer General
 //TODO: Улучшить графику курсора при выводе на экран, а также графику гексового меню
 //TODO: Улучшить закраску черными прямоугольниками по краям карты
 //TODO: Исправить меню звука и убрать включить звук при старте игры
 //TODO: При перемещении курсора не выводится названия места (юнита) под гексом
 //TODO: Убрать юнитов другой нации из рекрутируемых подразделений
-//TODO: Перед началом миссии центрироваться на курсоре (вывести карту в центре курсора)
-//TODO: При сражении юниты смещаются вбок
-//INFO:
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
@@ -624,8 +621,8 @@ public class C extends Canvas implements Runnable {
                      if(dA != null && dA[3] == 0 && dA[4] == 0 && o == 22 && vb[dA[2]][dA[1]] == 2) {
                         qa[db] = dA[2];
                         pa[db] = dA[1];
-//                        la = pa[db] - ((f - 25) / 45 + 2) / 2;
-//                        ma = qa[db] - (g / 50 + 1) / 2;
+                        la = pa[db] - ((f - 25) / 45 + 2) / 2;
+                        ma = qa[db] - (g / 50 + 1) / 2;
                         H();
                      }
                   } else {
@@ -1355,7 +1352,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
    }
 //Прорисовка местности в игре
    public static void B(Graphics var0, int var1, int var2, int var3, int var4) {
-      int var8 = var3 + offset_x;
+      int var8 = var3;
       //int var8 = var3;
       var0.setColor(h[29]);
       var0.setClip(0, 0, f, g);
@@ -1363,7 +1360,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
 
       for(int var7 = var1; var7 <= var1 + (f - 25) / 45 + 2 && var7 < oA - 1 && var7 >= 0; ++var7) {    
     //for(int var7 = var1; var7 <= var1 + (f - 16) / 25 + 2 && var7 < oA - 1 && var7 >= 0; ++var7) {
-         int var6 = (var7 & 1) == 1?var4 + 25 + offset_y:var4 + offset_y; 
+         int var6 = (var7 & 1) == 1?var4 + 25:var4; 
        //int var6 = (var7 & 1) == 1?var4 + 16:var4;
 
          for(int var5 = var2; var5 <= var2 + g / 50 + 1 && var5 < pA - 1 && var5 >= 0; ++var5) {    
@@ -1378,35 +1375,35 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
 
                if(var3 != 0) {
                   if(rA[0][var5][var7] != -1) {
-                     A(var0, sA, rA[0][var5][var7], var8, var6);
+                     A(var0, sA, rA[0][var5][var7], var8 + offset_x, var6 + offset_y);
                   }
 
                   if(rA[1][var5][var7] != -1) {
-                     A(var0, 3, rA[1][var5][var7], var8, var6);
+                     A(var0, 3, rA[1][var5][var7], var8 + offset_x, var6 + offset_y);
                   }
 
                   if(var3 == 1) {
-                     A(var0, 6, 1, var8, var6);
+                     A(var0, 6, 1, var8 + offset_x, var6 + offset_y);
                   } else if(var3 == 3) {
-                     A(var0, 6, 3, var8, var6);
+                     A(var0, 6, 3, var8 + offset_x, var6 + offset_y);
                   }
                }
                //Закрашивание черными квадратами сторон карты местности
                if(var7 == 1) {
-                  var0.fillRect(var8, var6, 45, 50);        
+                  var0.fillRect(var8 + offset_x, var6 + offset_y, 45, 50);        
                 //var0.fillRect(var8, var6, 25, 32);
                } else if(var7 == oA - 2) {
-                  var0.fillRect(var8 + 7, var6, 50, 50);    
+                  var0.fillRect(var8 + 7 + offset_x, var6 + offset_y, 50, 50);    
                 //var0.fillRect(var8 + 7, var6, 32, 32);
                }
 
                if(var5 == 1) {
                   if((var7 & 1) == 0) {
-                     var0.fillRect(var8, var6, 50, 25);     
+                     var0.fillRect(var8 + offset_x, var6 + offset_y, 50, 25);     
                    //var0.fillRect(var8, var6, 32, 16);
                   }
                } else if(var5 == pA - 2 && (var7 & 1) == 1) {
-                  var0.fillRect(var8, var6 + 25, 50, 50);   
+                  var0.fillRect(var8 + offset_x, var6 + 25 + offset_y, 50, 50);   
                 //var0.fillRect(var8, var6 + 16, 32, 32);
                }
             }
@@ -1995,8 +1992,8 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
          qa[1] = wA[1][2];
       }
 
-//      la = pa[db] - ((f - 25) / 45 + 2) / 2;
-//      ma = qa[db] - (g / 50 + 1) / 2;
+      la = pa[db] - ((f - 25) / 45 + 2) / 2;
+      ma = qa[db] - (g / 50 + 1) / 2;
       if(la < 0) {
          la = 0;
       }
@@ -3370,8 +3367,8 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
                   qa[0] = vA[0][2];
                }
 
-//               la = pa[0] - ((f - 25) / 45 + 2) / 2;
-//               ma = qa[0] - (g / 50 + 1) / 2;
+               la = pa[0] - ((f - 25) / 45 + 2) / 2;
+               ma = qa[0] - (g / 50 + 1) / 2;
                H();
             }
          } else {
@@ -3411,8 +3408,8 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
             hB = 2; //запрещено движение
             pa[db] = fA[1];
             qa[db] = fA[2];
-//            la = pa[db] - ((f - 25) / 45 + 2) / 2;
-//            ma = qa[db] - (g / 50 + 1) / 2;
+            la = pa[db] - ((f - 25) / 45 + 2) / 2;
+            ma = qa[db] - (g / 50 + 1) / 2;
             H();
             A(db == 0?vA:wA, db == 0?xA:yA, var2, (int[])null);
             za = var1;
@@ -4202,8 +4199,8 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
             A(db == 0?wA:vA, db == 0?yA:xA, db == 0?va:ta, (int[])null);
             qa[db] = cA[2];
             pa[db] = cA[1];
-//            la = pa[db] - ((f - 25) / 45 + 2) / 2;
-//            ma = qa[db] - (g / 50 + 1) / 2;
+            la = pa[db] - ((f - 25) / 45 + 2) / 2;
+            ma = qa[db] - (g / 50 + 1) / 2;
             H();
          }
 
@@ -5240,16 +5237,16 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
 //Вывод курсора с координатами Y(var2), X(var3) и смещение от начала экрана (var4, var5)
    public static void A(Graphics var0, int var1, int var2, int var3, int var4, int var5) {
       if(dA != null && !gA && !HG.fb) {
-         A(var0, 6, 2, (dA[1] - la) * 45 + -23 + offset_x, (dA[2] - ma) * 50 + ((dA[1] & 1) == 1?25:0) + -16 + offset_y);
+       A(var0, 6, 2, (dA[1] - la) * 45 + -23 + offset_x, (dA[2] - ma) * 50 + ((dA[1] & 1) == 1?25:0) + -16 + offset_y);
        //A(var0, 6, 2, (dA[1] - la) * 25 + -23, (dA[2] - ma) * 32 + ((dA[1] & 1) == 1?16:0) + -16);
       }
 
       var2 += var4;
       var3 += var5;
       if(dA != null && hB == 2 && dA != fA) {
-         A(var0, 6, 4, var2, var3);
+         A(var0, 6, 4, var2, var3); //вывод курсора на карте
       } else {
-         A(var0, 9, var1, var2, var3);
+         A(var0, 9, var1, var2, var3); //вывод курсора на карте
       }
 
    }
@@ -5304,7 +5301,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
       }
 
    }
-
+//Вывод нижней информационной панели на карте
    static void B(Graphics var0) {
       var0.setClip(0, 0, f, g);
       int var5 = 33 / HG.ob[18][4] + 1;
@@ -5317,8 +5314,8 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
          var2 = 0;
 
          for(var1 = 0; var1 <= f / HG.ob[18][3]; ++var1) {
-            A(var0, 18, 13, var2, var4);
-            A(var0, 18, 13, var2, var4 - 0);
+            A(var0, 18, 13, var2, var4);        //вывод песочного цвета фона
+            A(var0, 18, 13, var2, var4 - 0);    //вывод песочного цвета фона
             var2 += HG.ob[18][3];
          }
 
@@ -5331,21 +5328,21 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
       var0.drawLine(34, g + 0 - 32 - 1, 34, g);
       var0.drawLine(34, g + 0 - 16, f, g + 0 - 16);
       if(vb[qa[db]][pa[db]] == 0) {
-         A(var0, 6, 0, 1, g - 32 + 0);
+//         A(var0, 6, 0, 1, g - 32 + 0);  //вывод черного гекса (когда курсор на скрытой территории) в инфопанели
       } else {
          if(rA[0][qa[db]][pa[db]] != -1) {
-            A(var0, sA, rA[0][qa[db]][pa[db]], 1, g - 32 + 0);
+//            A(var0, sA, rA[0][qa[db]][pa[db]], 1, g - 32 + 0);  //вывод гекса местности в инфопанели
          }
 
          if(rA[1][qa[db]][pa[db]] != -1) {
-            A(var0, 3, rA[1][qa[db]][pa[db]], 1, g - 32 + 0);
+//            A(var0, 3, rA[1][qa[db]][pa[db]], 1, g - 32 + 0);  //вывод гекса дороги и реки в инфопанели
          }
       }
 
-      A(var0, 9, 0, 1, g - 32 + 0);
+//      A(var0, 9, 0, 1, g - 32 + 0);  //вывод гекса курсора в инфопанели
       String var6;
       if(o != 17 && fA != null && fA[23] == 1) {
-         A(var0, da[fA[0]][0], 3, 3, g - 32 + 0);
+//         A(var0, da[fA[0]][0], 3, 3, g - 32 + 0);  //вывод гекса юнита в инфопанели
          var4 = g - 32 + 0;
          var6 = HG.H(da[fA[0]][10]);
          String var8 = null;
@@ -5540,7 +5537,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
       }
 
    }
-
+//Вывод верхней информационной панели на карте
    static void C(Graphics var0) {
       var0.setClip(0, 0, f, g);
       int var5 = (HG.ob[12][4] + 1) / HG.ob[18][4] + 1;
@@ -5551,7 +5548,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
          int var2 = 0;
 
          for(var1 = 0; var1 <= f / HG.ob[18][3]; ++var1) {
-            A(var0, 18, 13, var2, var4);
+            A(var0, 18, 13, var2, var4);    //вывод песочного цвета фона
             var2 += HG.ob[18][3];
          }
 
@@ -5564,8 +5561,8 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
       if((zA & 15) == 3) {
          A(var0, 23, 9 + (db == 0?ra:sa), 5, 0);
       } else {
-         A(var0, 33, 1, 0, 0);
-         C(var0, eb, 12, 5, 1);
+         A(var0, 33, 1, 0, 0);     //вывод значка календаря в инфопанели
+         C(var0, eb, 12, 5, 1);    //вывод дня календаря в инфопанели
       }
 
       var1 = lA[0];
@@ -5573,9 +5570,9 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
          ++var1;
       }
 
-      A(var0, 12, var1, f / 2 - 13, 1);
-      C(var0, uA[db], f - (2 + HG.ob[33][3] + HG.ob[11][3] + 2), 5, 1);
-      A(var0, 33, 0, f - HG.ob[33][3] - 2, 0);
+      A(var0, 12, var1, f / 2 - 13, 1);      //вывод значка погоды в инфопанели
+      C(var0, uA[db], f - (2 + HG.ob[33][3] + HG.ob[11][3] + 2), 5, 1); //вывод очков престижа в инфопанели
+      A(var0, 33, 0, f - HG.ob[33][3] - 2, 0);    //вывод венка около очков престижа в инфопанели
    }
 
    static void D(Graphics var0) {
@@ -7197,7 +7194,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
                B(var1, la, ma, -23, -16);
                F(var1);
                if(!HG.fb) {
-                  A(var1, 0, (pa[db] - la) * 45, (qa[db] - ma) * 50 + ((pa[db] & 1) == 1?25:0), -23 + offset_x, -16 + offset_y);
+                A(var1, 0, (pa[db] - la) * 45, (qa[db] - ma) * 50 + ((pa[db] & 1) == 1?25:0), -23 + offset_x, -16 + offset_y);
                 //A(var1, 0, (pa[db] - la) * 25, (qa[db] - ma) * 32 + ((pa[db] & 1) == 1?16:0), -23, -16);
                }
 
@@ -7226,7 +7223,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
                B(var1, la, ma, -23, -16);
                F(var1);
                if(!HG.fb && !gA) {
-                  A(var1, 0, (pa[db] - la) * 45, (qa[db] - ma) * 50 + ((pa[db] & 1) == 1?25:0), -23 + offset_x, -16 + offset_y);//вывод курсора на экран с координатами Y, X и смещение от начала экрана -23, -16
+                A(var1, 0, (pa[db] - la) * 45, (qa[db] - ma) * 50 + ((pa[db] & 1) == 1?25:0), -23 + offset_x, -16 + offset_y);//вывод курсора на экран с координатами Y, X и смещение от начала экрана -23, -16
                 //A(var1, 0, (pa[db] - la) * 25, (qa[db] - ma) * 32 + ((pa[db] & 1) == 1?16:0), -23, -16);  
                }
 
@@ -7253,7 +7250,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
                   return;
                }
 
-               B(var1, la, ma, -23 + offset_x, -16 + offset_y);
+               B(var1, la, ma, -23, -16);
                F(var1);
                A(var1, 3);
                if(p == 22 && HG.ob[7] != null) {
@@ -7276,13 +7273,13 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
                if(bA != null) {
                   A(var1, 6, 5, 5, 2);
                   A(var1, 9, 0, 5, 2);
-                  A(var1, da[bA[0]][0], 3, 5, 2);
+                  A(var1, da[bA[0]][0], 3, 5, 2);   //гекс атакующий в верхней инфопанели во время боя
                }
 
                if(cA != null) {
-                  A(var1, 6, 5, f - 32 - 5, 2);
-                  A(var1, 9, 0, f - 32 - 5, 2);
-                  A(var1, da[cA[0]][0], 0, f - 32 - 5, 2);
+                  A(var1, 6, 5, f - 32 - 35, 2);
+                  A(var1, 9, 0, f - 32 - 35, 2);
+                  A(var1, da[cA[0]][0], 0, f - 32 - 35, 2); //гекс защитник в верхней инфопанели во время боя
                }
                break;
             case 22:
@@ -7291,7 +7288,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
                   return;
                }
 
-               B(var1, la, ma, -23 + offset_x, -16 + offset_y);
+               B(var1, la, ma, -23, -16);
                F(var1);
                if(kB) {
                   G(var1);
@@ -7446,8 +7443,8 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
                if(dA != null && !gA) {
                   pa[db] = dA[1];
                   qa[db] = dA[2];
-//                  la = pa[db] - ((f - 25) / 45 + 2) / 2;
-//                  ma = qa[db] - (g / 50 + 1) / 2;
+                  la = pa[db] - ((f - 25) / 45 + 2) / 2;
+                  ma = qa[db] - (g / 50 + 1) / 2;
                   H();
                   dA = null;
                   A(db ^ 1, (int[])null);

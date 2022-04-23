@@ -4249,8 +4249,8 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
             C.hB = 2;
             C.pa[C.db] = C.fA[1];
             C.qa[C.db] = C.fA[2];
-//            C.la = C.pa[C.db] - ((C.f - 25) / 45 + 2) / 2;
-//            C.ma = C.qa[C.db] - (C.g / 50 + 1) / 2;
+            C.la = C.pa[C.db] - ((C.f - 25) / 45 + 2) / 2;
+            C.ma = C.qa[C.db] - (C.g / 50 + 1) / 2;
             C.H();
             C.wb = -1;
             C.A(17);
