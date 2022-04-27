@@ -2578,7 +2578,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
       }
 
    }
-
+//Купить технику, рекрутировать офицеров
    public static void S(int var0) {
       int var1;
       int var2;
@@ -2690,14 +2690,16 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
          var20[6] = 66;
          var20[7] = 2;
          break;
-      case 31:
+      case 31:  //техника
          var2 = 0;
-         var0 = C.db == 0?C.ra:C.sa;
-         boolean var10 = var0 == 2?true:(var0 != 6 && var0 != 0?true:true);
+         var0 = (C.db == 0)?C.ra:C.sa;    //var0 = ((C.db == 0)?C.ra:C.sa);
+         int var10 = var0 == 2?12:(var0 != 6 || var0 != 0?10:11);
 
          Vector var12;
-         for(var12 = new Vector(); var2 < C.da.length; ++var2) {
-            if(var10 == (C.da[var2][1] == 2?true:(C.da[var2][1] != 6 && C.da[var2][1] != 0?true:true)) && C.cb >= C.da[var2][2]) {
+         var12 = new Vector();
+         while (var2 < C.da.length) {
+         //for(var12 = new Vector(); var2 < C.da.length; ++var2) {    //перебор библиотеки
+            if(var10 == (C.da[var2][1] == 2?12:((C.da[var2][1] == 6 || C.da[var2][1] == 0)?10:11)) && C.cb >= C.da[var2][2]) {
                var0 = -1;
                switch(C.ab) {
                case 0:
@@ -2713,30 +2715,27 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
                }
 
                if(var0 != -1 && C.bb >= var0) {
-                  int[][] var10000;
-                  if(C.db == 0) {
-                     var10000 = C.xA;
-                  } else {
-                     var10000 = C.yA;
-                  }
 
                   if(C.db == 0) {
-                     var10000 = C.vA;
-                  } else {
-                     var10000 = C.wA;
+                     int[][] array = (C.db == 0) ? C.xA : C.yA;
+                     int[][] array2 = (C.db == 0) ? C.vA : C.wA;
                   }
 
                   Integer var11 = new Integer(var2);
                   var12.addElement(var11);
                }
             }
+           ++var2; 
          }
 
-         var4 = var12.size();
-         var7 = sa[31] = new int[(var4 + 2) * 4];
-         if(var4 > 0) {
-            var2 = 8;
+//         var4 = var12.size();
+//         var7 = sa[31] = new int[(var4 + 2) * 4];
 
+                var4 = var12.size();
+//                sa = HG.sa;
+                var7 = sa[31] = new int[(var4 + 2) * 4];
+         if(var4 > 0) {
+            var2 = 8;                
             for(var1 = 0; var1 < var4; ++var1) {
                var0 = ((Integer)var12.elementAt(var1)).intValue();
                var7[var2++] = C.da[((Integer)var12.elementAt(var1)).intValue()][10];
@@ -3709,7 +3708,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
       }
 
    }
-//Загрузка в меню пунктов (рекрутировать)
+//Загрузка в меню пунктов (рекрутировать, купить и т.д.)
    static void Y(int var0) {
       oa = 0;
       bA = 0;
@@ -3725,9 +3724,9 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
       xa = -1;
       wa = -1;
       ya = null;
-      S(var0);
+      S(var0);  //выбор сообщений
       int[] var8 = sa[ua];
-      tA = V(var0);
+      tA = V(var0); //количество сообщений
       if(rA == null || rA.length != tA) {
          rA = new String[tA];
       }

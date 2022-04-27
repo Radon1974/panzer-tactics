@@ -2,7 +2,6 @@
 //TODO: Улучшить графику курсора при выводе на экран, а также графику гексового меню
 //TODO: Исправить меню звука и убрать включить звук при старте игры
 //TODO: При перемещении курсора не выводится названия места (юнита) под гексом
-//TODO: Убрать юнитов другой нации из рекрутируемых подразделений
 //TODO: Сместить прицел при наведении на противника во время боя
 
 import java.io.ByteArrayInputStream;
@@ -5249,11 +5248,11 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
       }
 
    }
-
+//Вывод стрелки при построении маршрута перемещения юнита
    static void A(Graphics var0) {
       int var7 = 0;
 
-      for(int var6 = 0; var6 < gB.length; var6 += 2) {
+      for(int var6 = 0; var6 < gB.length; var6 += 2) {  //перемещение юнита
          int var5 = gB[var6];
          int var4 = gB[var6 + 1];
          if(var5 == 0 || var4 == 0) {
@@ -5281,7 +5280,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
          //var2 = (var4 - ma) * 32 + ((var5 & 1) == 1?16:0) + -16;
          var3 = (var5 - la) * 45 + -23 + offset_x;
          //var3 = (var5 - la) * 25 + -23;
-         A(var0, 4, var1, var3, var2);
+         A(var0, 4, var1, var3, var2);  //вывод стрелки маршрута пути
       }
 
    }
@@ -5573,7 +5572,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
       C(var0, uA[db], f - (2 + HG.ob[33][3] + HG.ob[11][3] + 2), 5, 1); //вывод очков престижа в инфопанели
       A(var0, 33, 0, f - HG.ob[33][3] - 2, 0);    //вывод венка около очков престижа в инфопанели
    }
-
+//Вывод флагов нации на гексах
    static void D(Graphics var0) {
       int var4 = 8 - HG.ob[5][4];
 
@@ -5632,7 +5631,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
       var0.setColor(h[36]);
       HG.A(HG.H(78) + " - " + HG.H(79) + ": " + HG.H(327707), 2, 1, var0, 0, h[36], h[37]);
    }
-
+//Вывод силы юнита на иконке
    static void C(Graphics var0, int var1, int var2, int var3, int var4) {
       if(var1 < 0) {
          var1 *= -1;
