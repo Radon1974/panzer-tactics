@@ -1,10 +1,9 @@
-//TODO: При старте сценария недоступен курсор при использовании мыши (только когда клавишами пользуешься)
 //TODO: Модернизировать графику юнитов на графику Panzer General
 //TODO: Улучшить графику курсора при выводе на экран, а также графику гексового меню
-//TODO: Улучшить закраску черными прямоугольниками по краям карты
 //TODO: Исправить меню звука и убрать включить звук при старте игры
 //TODO: При перемещении курсора не выводится названия места (юнита) под гексом
 //TODO: Убрать юнитов другой нации из рекрутируемых подразделений
+//TODO: Сместить прицел при наведении на противника во время боя
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -1390,20 +1389,20 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
                }
                //Закрашивание черными квадратами сторон карты местности
                if(var7 == 1) {
-                  var0.fillRect(var8 + offset_x, var6 + offset_y, 45, 50);        
+                  var0.fillRect(var8 + offset_x, var6 + offset_y, 45, 50);    //закрашивание левой части карты      
                 //var0.fillRect(var8, var6, 25, 32);
                } else if(var7 == oA - 2) {
-                  var0.fillRect(var8 + 7 + offset_x, var6 + offset_y, 50, 50);    
+                  var0.fillRect(var8 + 15 + offset_x, var6 + offset_y, 50, 50);  //закрашивание правой части карты    
                 //var0.fillRect(var8 + 7, var6, 32, 32);
                }
 
                if(var5 == 1) {
                   if((var7 & 1) == 0) {
-                     var0.fillRect(var8 + offset_x, var6 + offset_y, 50, 25);     
+                     var0.fillRect(var8 + offset_x, var6 + offset_y, 60, 25);   //закрашивание верхней части карты     
                    //var0.fillRect(var8, var6, 32, 16);
                   }
                } else if(var5 == pA - 2 && (var7 & 1) == 1) {
-                  var0.fillRect(var8 + offset_x, var6 + 25 + offset_y, 50, 50);   
+                  var0.fillRect(var8 + offset_x, var6 + 25 + offset_y, 60, 50); //закрашивание нижней части карты
                 //var0.fillRect(var8, var6 + 16, 32, 32);
                }
             }
