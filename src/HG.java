@@ -121,6 +121,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
    static int checkmark_x = 0;
    static int checkmark_y = 0;
    static boolean popup_menu = false;   //триггер всплывающего меню
+   static int[] sens_menu = new int[50];
 
    public static InputStream A(String var0) throws NullPointerException {
       DataInputStream var1 = null;
@@ -1700,7 +1701,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
       case 108:
       case 109:
          var11 = 33;
-         var9 = ob[26][4] + 7;
+         var9 =  ob[26][4] + 7;
          boolean var51 = var0 != null && var5 > bA - var9 && var5 <= eA;
          boolean var40 = true;
          if(var6) {
@@ -3748,10 +3749,10 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
          case 199:
             ++var4;
             break;
-         default:
-            rA[var2] = D(var0, var2);   //выводимые на экран сообщения
+         //default:
+         //   rA[var2] = D(var0, var2);   //выводимые на экран сообщения
          }
-
+         rA[var2] = D(var0, var2);   //выводимые на экран сообщения
          if(var1 > 99 && var1 < 150) {
             if(wa == -1) {
                wa = var2;
@@ -3852,7 +3853,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
    }
 
    static void R() {}
-//Заставка для меню игры (вывод фона карты из игры)
+//Заставка для меню игры (вывод фона карты из игры) и рисование пунктов меню
    static void B(Graphics var0) {
       if(ua != -1) {
          int[] var10 = sa[ua];
@@ -3879,14 +3880,15 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
             case 198:
             case 199:
                var2 = var7++;
+               break;   
             }
-
             hA = cA - 1;
             iA = (var8 < bA?bA:var8) - 1;
             jA = gA + 2;
             kA = eA - iA + 2;
             var0.setClip(hA, iA, jA, kA);
             var8 += A(var0, var5, var4, var1, var2, var8, var3, var10[(var5 << 2) + 1], var10[(var5 << 2) + 3]);
+            sens_menu[var5] = var8; //точки сенсорного меню
          }
 
          ra = 0;
@@ -3924,7 +3926,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
          return false;
       }
    }
-
+//Обнуление сообщений меню и загрузка нового меню
    static void AA(int var0) {
       Z(ua);    //обнуление сообщений меню
       ua = var0;

@@ -1,9 +1,9 @@
 //TODO: Модернизировать графику юнитов на графику Panzer General
 //TODO: Улучшить графику курсора при выводе на экран, а также графику гексового меню
-//TODO: Исправить меню звука и убрать включить звук при старте игры
+//TODO: Убрать включить звук при старте игры
 //TODO: При перемещении курсора не выводится названия места (юнита) под гексом
 //TODO: Сместить прицел при наведении на противника во время боя
-
+//TODO: Улучшить сенсорное распознавание меню с учетом скролинга (сделать меню юнитов)
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
@@ -429,7 +429,7 @@ public class C extends Canvas implements Runnable {
                   ++m;
                } catch (Exception var2) {
                   if(m >= 5) {
-                     A(11);
+                     A(11); //Вызов меню звука при старте
                      HG.ta = true;
                   } else {
                      k = 0L;
@@ -697,11 +697,19 @@ protected void pointerPressed(int var_x, int var_y) {
 protected void pointerDragged(int var_x, int var_у) {
   if(!HG.fb && !HG.popup_menu) {
     if(HG.ta) {
-     if(var_у - sens_y2 <= (-1)) {
-      HG.O1();   //прибавить смещение в гексах по оси y
-    } else if(var_у - sens_y2 >= 1 ) {
-      HG.P1();   //убавить смещение в гексах по оси y
-    }    
+     if(var_у - sens_y2 <= (-1)) {  //прибавить смещение в гексах по оси y
+         if(HG.pa > HG.fA) {
+           HG.oa -= 2;
+           if(HG.oa < -(HG.pa - HG.fA)) {
+            HG.oa = -(HG.pa - HG.fA);
+           }
+         }
+     } else if(var_у - sens_y2 >= 1 ) {   //убавить смещение в гексах по оси y
+      HG.oa += 2;
+       if(HG.oa > 0) {
+         HG.oa = 0;
+       }
+     }    
     } else {
     //Смещение игрового поля
     if(var_x - sens_x2 <= (-1)) {
@@ -859,28 +867,31 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
      }  
  } 
 //Выбор пунктов главного меню
-  if(HG.ta) {   // && HG.gb <= 1
+  if(HG.ta && !HG.fb && !HG.popup_menu) {   // && HG.gb <= 1
   //int var_pos_x1 = 52;  //позиция по оси X невыделенного пункта меню
   //int var_pos_x2 = 40;  //позиция по оси X выделенного пункта меню
-  int var_pos_y;  //позиция по оси Y первого пункта меню
+  //int var_pos_y;  //позиция по оси Y первого пункта меню
   int var_menu = HG.va;
     //if(HG.ua == 0 || HG.ua == 33) {    //главное меню, меню паузы (номер позиции меню)
-       var_pos_y = HG.bA;  //позиция по оси Y первого пункта меню
-      if((HG.ua < 30 || HG.ua > 32) && HG.xa != (-1)) { 
-        for( int var_i = HG.wa; var_i <= HG.xa; ++var_i) {
-          if(var_y - HG.oa >= var_pos_y && var_y - HG.oa <= var_pos_y + 20) {
-            HG.va = var_i; 
+       //var_pos_y = HG.bA;  //позиция по оси Y первого пункта меню
+     if(HG.xa != (-1)) {  
+      if(HG.ua < 30 || HG.ua > 32) { 
+        for( int var_i = 0; var_i <= HG.xa; ++var_i) {
+          
+          if(var_y >= HG.sens_menu[var_i] && var_y <= HG.sens_menu[var_i] + 20) {
+            HG.va = var_i + 1; 
           }
-          var_pos_y = var_pos_y + 28;
+//          var_pos_y = var_pos_y + 28 + HG.oa;
         }
-    } else if (HG.xa != (-1)) { //нет пунктов меню (нечего выбирать)
-        for( int var_i = HG.wa; var_i <= HG.xa; ++var_i) {
-          if(var_y - HG.oa >= var_pos_y && var_y - HG.oa <= var_pos_y + 45) {
-            HG.va = var_i; 
+      } else { //нет пунктов меню (нечего выбирать)
+        for( int var_i = 0; var_i <= HG.xa; ++var_i) {  //for( int var_i = HG.wa; var_i <= HG.xa; ++var_i) {
+          if(var_y >= HG.sens_menu[var_i] && var_y <= HG.sens_menu[var_i] + 38) {
+            HG.va = var_i + 1; 
           }
-          var_pos_y = var_pos_y + 45;
-        }    
-      }
+        }
+//          var_pos_y = var_pos_y + 45 + HG.oa;
+      }    
+     }
 //    if(HG.ua == 1 || HG.ua == 2 || HG.ua == 3 || HG.ua == 5 || (HG.ua >= 12 && HG.ua <= 24)) {    //подменю (номер позиции меню)
 //       var_pos_y = 96;  //позиция по оси Y первого пункта меню
 //        for( int var_i = HG.wa; var_i <= HG.xa; ++var_i) {
@@ -899,9 +910,9 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
 //          var_pos_y = var_pos_y + 28;
 //        }
 //    }
-    //if(HG.ua < 30 || HG.ua > 32) {  //если не экраны скролинга, то выбор пункта меню
+//    if(sens_x != sens_x2 && sens_y != sens_y2) {  //если не экраны скролинга, то выбор пункта меню
      HG.M();    //выбор пункта меню движение вниз
-    
+//    }
      if(o != 12 && o != 1 && j == null && var_x <= 20 && var_y >= g - 20) { //нажат левый софт (вход в следующее меню)
         u[18] = 20;
         v[18] = 0;
@@ -922,7 +933,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
      } else {
         k = 0L;
      }
-    //} 
+     
  } 
  //Выбор пунктов всплывающего меню
   if(HG.popup_menu) {   //if(HG.gb == 14 || HG.gb == 25 || HG.gb == 29) { 
@@ -7312,7 +7323,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
          A(var1, HG.H(327707), var16, var3 + 2 * var2, 2, 17, 0, 0, 0);
       } else {
          if(HG.ta) {
-            HG.B(var1);
+            HG.B(var1); //рисование пунктов меню
          }
 
          if(HG.fb) {
@@ -7395,7 +7406,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
 
                if(!var3 && C(17)) {
                   if(HG.lA != -1) { //выбор звука в игре
-                     HG.T(HG.lA);
+                     HG.T(HG.lA);   //настройки звука
                   } else {
                      HG.Q();
                   }
@@ -7860,7 +7871,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
          this.V();  //исполнение событий программы
          if(!c) {   //не переходить в режиме паузы игры
             if(HG.ta) {    //триггер главного пункта меню
-               HG.R(); //пункты главного меню
+               HG.R(); //пусто
             } else if(!HG.fb) {
                C(); //выбор пунктов меню???
             }
