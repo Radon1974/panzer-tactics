@@ -1,14 +1,12 @@
 //TODO: Модернизировать графику юнитов на графику Panzer General - выполняется
 //TODO: Улучшить графику курсора при выводе на экран, а также графику гексового меню
-//TODO: Убрать включить звук при старте игры
 //TODO: При перемещении курсора не выводится названия места (юнита) под гексом
 //TODO: Сместить прицел при наведении на противника во время боя
 //TODO: При рекрутировании техники в конце списка выдает не то всплывающее окно с текстом
 //TODO: Звездочки нанимаемого офицера сместить (офицер на юните)
 //TODO: Сделать инерцию при смещении экрана курсором
 //TODO: Самолет не атакует , когда под ним враг (если не лететь - стоять на месте)
-//TODO: Ячейчи слева и сверху карты недоступны курсору
-//TODO: Сделать показ зоны куда можно ходить (прозрачными)
+//TODO: Сделать показ зоны куда можно ходить как в Panzer General (прозрачными)
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
@@ -126,6 +124,7 @@ public class C extends Canvas implements Runnable {
    public static boolean tb = false;
    static int ub = -1;
    static int[][] vb;
+   static int[][] vb2;
    static int wb = -1;
    static int[] xb;
    static int[][] yb;
@@ -179,6 +178,7 @@ public class C extends Canvas implements Runnable {
    static int key = 0;
    static int offset_x = 0;
    static int offset_y = 0;
+   static boolean alpha_pos = false;
 
 //Режим работы программы
    public static void A(int var0) {
@@ -187,7 +187,7 @@ public class C extends Canvas implements Runnable {
       o = var0;
       A();
    }
-//Исполнение режимов работы программы
+//INFO: Исполнение режимов работы программы
    public static void A() {
       q = false;
       if(fa != null) {
@@ -203,7 +203,7 @@ public class C extends Canvas implements Runnable {
          break;
       case 11:
          if(!n) {
-            HG.AA(1);
+            HG.AA(0);   //HG.AA(1); - выводить меню звук при старте игры
             n = true;
          } else {
             HG.AA(0);
@@ -750,7 +750,7 @@ protected void pointerDragged(int var_x, int var_у) {
   }
 }
         
-//Нажатие мыши или сенсорного ввода   
+//INFO: Нажатие мыши или сенсорного ввода   
 protected void pointerReleased(int var_x, int var_y) {
   sens_x = var_x;
   sens_y = var_y;
@@ -1364,10 +1364,10 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
          }
       }
    }
-//Прорисовка местности в игре
+//INFO: Прорисовка местности в игре
    public static void B(Graphics var0, int var1, int var2, int var3, int var4) {
       int var8 = var3;
-      //int var8 = var3;
+      int var9 = var3;
       var0.setColor(h[29]);
       var0.setClip(0, 0, f, g);
       var0.fillRect(0, 0, f, g);
@@ -1382,12 +1382,13 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
             var0.setColor(h[29]);
             var0.setClip(0, 0, f, g);
             if(var5 < pA && rA[2][var5][var7] != -1) {
-               var3 = vb[var5][var7];
+               var3 = vb[var5][var7];   //новое состояние закраски гексов
+               var9 = vb2[var5][var7];  //предыдущее состояние закраски гексов (состоит из значения 4)
                if(ac) {
                   var3 = 2;
                }
 
-               if(var3 != 0) {
+               if(var3 != 0) {  //если незапрещено движение
                   if(rA[0][var5][var7] != -1) {
                      A(var0, sA, rA[0][var5][var7], var8 + offset_x, var6 + offset_y);
                   }
@@ -1397,9 +1398,14 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
                   }
 
                   if(var3 == 1) {
-                     A(var0, 6, 1, var8 + offset_x, var6 + offset_y);
-                  } else if(var3 == 3) {
-                     A(var0, 6, 3, var8 + offset_x, var6 + offset_y);
+                     A(var0, 6, 1, var8 + offset_x, var6 + offset_y);   //закраска серым места куда можно ходить (на черных гексах)
+                  }  
+                  if(var3 == 3) {
+                     A(var0, 6, 3, var8 + offset_x, var6 + offset_y);   //закраска красным
+                  }
+                  if(var9 == 4) {
+                     A(var0, 6, 2, var8 + offset_x, var6 + offset_y);   //закраска желтым
+                     //vb2[var5][var7] = 2;   //возвращаем гекс без закраски
                   }
                }
                //Закрашивание черными квадратами сторон карты местности
@@ -1427,39 +1433,26 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
 
          var8 += 45;    //x координаты  var8 += 25;
       }
-
+    
    }
-
+//------Построение видимой территории
    static void A(int[][] var0, int[][] var1, int[][] var2, int[] var3) {
       vb = new int[pA][oA];
+      vb2 = new int[pA][oA];
       int var4;
       int var5;
       int var6;
       int var7;
       int var8;
-      if(var3 != null) {
-         var8 = var3[1];
-         var7 = var3[2];
-         var6 = da[var3[0]][5];
-         var4 = da[var3[0]][18];
-         var5 = B(var4, var3);
-         var4 = da[var3[0]][19];
-         if(var3[25] != -1) {
-            var4 += ea[var3[25]][7];
-         }
-
-         if(var6 != 5) {
-            if(rA[2][var7][var8] == 3) {
-               --var4;
-            } else if(rA[2][var7][var8] == 4) {
-               ++var4;
-            }
-         }
-
+      int var11;
+      if (alpha_pos == true)  {
+        alpha_pos = false; 
+      } else {
+        alpha_pos = true; 
+      }
+      for(var11 = 0; var11 < var0.length; ++var11) {
          yb = new int[pA][oA];
-         A(var8, var7, var5, 1, var6);
-         yb = new int[pA][oA];
-         A(var8, var7, var4, 2, var6);
+         F(var0[var11][1], var0[var11][2]);   //видимая территория вокруг своих городов
       }
 
       for(var8 = 0; var8 < var2.length; ++var8) {
@@ -1481,40 +1474,65 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
             }
 
             yb = new int[pA][oA];
-            A(var7, var6, var4, 2, var5);
+            A(var7, var6, var4, 2, var5); //видимая территория вокруг своих юнитов
          }
-      }
+      }      
 
-      int var10 = 0;
+      if(var3 != null) {
+         var8 = var3[1];
+         var7 = var3[2];
+         var6 = da[var3[0]][5];
+         var4 = da[var3[0]][18];
+         var5 = B(var4, var3);
+         var4 = da[var3[0]][19];
+         if(var3[25] != -1) {
+            var4 += ea[var3[25]][7];
+         }
 
-      int var11;
-      for(var11 = 0; var11 < var0.length; ++var11) {
+         if(var6 != 5) {
+            if(rA[2][var7][var8] == 3) {
+               --var4;
+            } else if(rA[2][var7][var8] == 4) {
+               ++var4;
+            }
+         }
          yb = new int[pA][oA];
-         F(var0[var11][1], var0[var11][2]);
+         A(var8, var7, var4, 2, var6);  //видимая территория на ближайших гексах около юнита (радиус 1 - 4 клетки)
+
+         yb = new int[pA][oA]; 
+         A(var8, var7, var5, 1, var6);  //серая территория на черных гексах 
+         
       }
 
-      for(var11 = 0; var11 < var1.length; ++var11) {
-         int var9;
-         for(var9 = var1[var11][1] + -2; var9 <= var1[var11][1] + 2; ++var9) {
-            for(var10 = var1[var11][2] + -1; var10 <= var1[var11][2] + 1; ++var10) {
-               if(var9 > 0 && var9 < oA - 1 && var10 > 0 && var10 < pA - 1) {
-                  vb[var10][var9] = 2;
-               }
-            }
-         }
 
-         for(var9 = var1[var11][1] + -1; var9 <= var1[var11][1] + 1; ++var9) {
-            if(var9 > 0 && var9 < oA - 1 && var10 > 0 && var10 < pA - 1) {
-               vb[var10][var9] = 2;
-            }
-         }
 
-         for(var9 = var1[var11][1] + -1; var9 <= var1[var11][1] + 1; ++var9) {
-            if(var9 > 0 && var9 < oA - 1 && var10 > 0 && var10 < pA - 1) {
-               vb[var10][var9] = 2;
-            }
-         }
-      }
+      
+
+
+//Всю оставшуюся территорию (аэродромы и т.д.) сделать видимыми
+//      int var10 = 0;
+//      for(var11 = 0; var11 < var1.length; ++var11) {
+//         int var9;
+//         for(var9 = var1[var11][1] + -2; var9 <= var1[var11][1] + 2; ++var9) {
+//            for(var10 = var1[var11][2] + -1; var10 <= var1[var11][2] + 1; ++var10) {
+//               if(var9 > 0 && var9 < oA - 1 && var10 > 0 && var10 < pA - 1) {
+//                  vb[var10][var9] = 2;
+//               }
+//            }
+//         }
+//
+//         for(var9 = var1[var11][1] + -1; var9 <= var1[var11][1] + 1; ++var9) {
+//            if(var9 > 0 && var9 < oA - 1 && var10 > 0 && var10 < pA - 1) {
+//               vb[var10][var9] = 2;
+//            }
+//         }
+//
+//         for(var9 = var1[var11][1] + -1; var9 <= var1[var11][1] + 1; ++var9) {
+//            if(var9 > 0 && var9 < oA - 1 && var10 > 0 && var10 < pA - 1) {
+//               vb[var10][var9] = 2;
+//            }
+//         }
+//      }
 
    }
 
@@ -2710,7 +2728,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
       }
 
    }
-//Вывод юнитов и прочего на карту местности
+//INFO: Вывод юнитов и прочего на карту местности
    static void A(Graphics var0, int[] var1) {
       int var3 = var1[1];
       int var2 = var1[2];
@@ -3854,7 +3872,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
       fB = new int[pA * oA + 2];
       gB = new int[pA * oA * 2];
    }
-//Алгоритм определения пути
+//------ Алгоритм определения пути
    static final void A(int[] var_Unit, int var_X, int var_Y) {  //построение пути перемещения: юнит, координата X, координата Y
       int var_X1 = var_Unit[1];   //координата X начальная юнита
       int var_Y1 = var_Unit[2];   //координата Y начальная юнита
@@ -4129,11 +4147,17 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
 
       return 0;
    }
-
+//Ставит видимую территорию
    static void A(int var0, int var1, int var2, int var3, int var4) {
       if(var2 >= 0) {
+          
          vb[var1][var0] = var3;
-
+         if (var3 == 2 && alpha_pos == false) {
+            vb2[var1][var0] = 4;    
+         }  
+         if (var3 == 1 && alpha_pos == true) {
+            vb2[var1][var0] = 0;    
+         }
          for(int var8 = 0; var8 < 12; var8 += 2) {
             int var7 = var0 + nB[var0 & 1][var8];
             int var6 = var1 + nB[var0 & 1][var8 + 1];
@@ -4146,7 +4170,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
 
       }
    }
-
+//INFO: Ставит видимую территорию вокруг занятых городов
    static void F(int var0, int var1) {
       vb[var1][var0] = 2;
       yb[var1][var0] = 1;
@@ -5248,7 +5272,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
 
       return false;
    }
-//Вывод курсора с координатами Y(var2), X(var3) и смещение от начала экрана (var4, var5)
+//INFO: Вывод курсора с координатами Y(var2), X(var3) и смещение от начала экрана (var4, var5)
    public static void A(Graphics var0, int var1, int var2, int var3, int var4, int var5) {
       if(dA != null && !gA && !HG.fb) {
        A(var0, 6, 2, (dA[1] - la) * 45 + -23 + offset_x, (dA[2] - ma) * 50 + ((dA[1] & 1) == 1?25:0) + -16 + offset_y);
@@ -5264,7 +5288,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
       }
 
    }
-//Вывод стрелки при построении маршрута перемещения юнита
+//INFO: Вывод стрелки при построении маршрута перемещения юнита
    static void A(Graphics var0) {
       int var7 = 0;
 
@@ -5315,7 +5339,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
       }
 
    }
-//Вывод нижней информационной панели на карте
+//INFO: Вывод нижней информационной панели на карте
    static void B(Graphics var0) {
       var0.setClip(0, 0, f, g);
       int var5 = 33 / HG.ob[18][4] + 1;
@@ -5551,7 +5575,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
       }
 
    }
-//Вывод верхней информационной панели на карте
+//INFO: Вывод верхней информационной панели на карте
    static void C(Graphics var0) {
       var0.setClip(0, 0, f, g);
       int var5 = (HG.ob[12][4] + 1) / HG.ob[18][4] + 1;
@@ -5588,7 +5612,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
       C(var0, uA[db], f - (2 + HG.ob[33][3] + HG.ob[11][3] + 2), 5, 1); //вывод очков престижа в инфопанели
       A(var0, 33, 0, f - HG.ob[33][3] - 2, 0);    //вывод венка около очков престижа в инфопанели
    }
-//Вывод флагов нации на гексах
+//INFO: Вывод флагов нации на гексах
    static void D(Graphics var0) {
       int var4 = 8 - HG.ob[5][4];
 
@@ -5647,7 +5671,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
       var0.setColor(h[36]);
       HG.A(HG.H(78) + " - " + HG.H(79) + ": " + HG.H(327707), 2, 1, var0, 0, h[36], h[37]);
    }
-//Вывод силы юнита на иконке
+//INFO: Вывод силы юнита на иконке
    static void C(Graphics var0, int var1, int var2, int var3, int var4) {
       if(var1 < 0) {
          var1 *= -1;
@@ -7047,7 +7071,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
       f = this.getWidth();
       g = this.getHeight();
    }
-//Вывод картинки на заставке
+//INFO: Вывод картинки на заставке
    public void paint(Graphics var1) {   //рисование картинки игры
       int var2;
       int var3;

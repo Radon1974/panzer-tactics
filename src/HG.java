@@ -2579,7 +2579,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
       }
 
    }
-//Купить технику, рекрутировать офицеров
+//INFO: Купить технику, рекрутировать офицеров
    public static void S(int var0) {
       int var1;
       int var2;
@@ -3639,7 +3639,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
       }
 
    }   
-//Пункты меню (определение)
+//INFO: Пункты меню (определение)
    static void Q() {
       if(va >= 0) { //пункты меню
          int[] var2 = sa[ua];
@@ -3709,7 +3709,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
       }
 
    }
-//Загрузка в меню пунктов (рекрутировать, купить и т.д.)
+//INFO: Загрузка в меню пунктов (рекрутировать, купить и т.д.)
    static void Y(int var0) {
       oa = 0;
       bA = 0;
@@ -3941,7 +3941,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
       }
 
    }
-//Гексовое меню в игре
+//INFO: Гексовое меню в игре
    public static int[] B(int var0, int var1, int var2) {
       int[] var3 = new int[]{var0, var1};
       switch(var2) {
@@ -4905,7 +4905,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
       lb = 0;
       popup_menu = false;   //триггер всплывающего меню (закрытие окна)
    }
-
+//INFO: Вывод курсора гексового меню на экран
    static void C(Graphics var0) {
       if(gb != -1) {
          int[] var10 = eb[gb];
