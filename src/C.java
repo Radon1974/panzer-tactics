@@ -1368,7 +1368,8 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
 //------ Прорисовка местности в игре
    public static void B(Graphics var0, int var1, int var2, int var3, int var4) {
       int var8 = var3;
-      int var9 = var3;
+      int var9;
+      //int var10;
       var0.setColor(h[29]);
       var0.setClip(0, 0, f, g);
       var0.fillRect(0, 0, f, g);
@@ -1385,6 +1386,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
             if(var5 < pA && rA[2][var5][var7] != -1) {
                var3 = vb[var5][var7];   //новое состояние закраски гексов
                var9 = vb2[var5][var7];  //предыдущее состояние закраски гексов (состоит из значения 4)
+               //var10 = yb[var5][var7];  //состояние закраски городов
                if(ac) {
                   var3 = 2;
                }
@@ -1397,17 +1399,20 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
                   if(rA[1][var5][var7] != -1) {
                      A(var0, 3, rA[1][var5][var7], var8 + offset_x, var6 + offset_y);
                   }
-
-                  if(var3 == 1 && var9 != 4) {
-                     A(var0, 6, 1, var8 + offset_x, var6 + offset_y);   //закраска серым места куда можно ходить (на черных гексах)
-                  }  
+                  
+                  if(var3 == 1 && var9 != 4 && var9 != 5) {
+                        A(var0, 6, 1, var8 + offset_x, var6 + offset_y);    //закраска серым где ходить (на черных гексах), кроме городов и нет закраски
+                  }
+                  
                   if(var3 == 3) {
                      A(var0, 6, 3, var8 + offset_x, var6 + offset_y);   //закраска красным
                   }
-                  if(var9 == 4 && var3 != 2) {
-                     A(var0, 6, 2, var8 + offset_x, var6 + offset_y);   //закраска желтым, на видимых гексах
+                  if(var9 == 5 && var3 == 1) {
+                     A(var0, 6, 2, var8 + offset_x, var6 + offset_y);   //закраска желтым, на видимых гексах и городах (заместо серых гексов)
                   }
-
+                  if(var3 == 1 && var9 == 4) {
+                     A(var0, 6, 2, var8 + offset_x, var6 + offset_y);   //закраска желтым, если нет закраски и серая закраска
+                  }
                }
                //Закрашивание черными квадратами сторон карты местности
                if(var7 == 1) {
@@ -4157,7 +4162,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
             vb2[var1][var0] = 4;    
          }
          if (var3 == 2 && alpha_pos == false) {
-            vb2[var1][var0] = 2;    
+            vb2[var1][var0] = 0;    
          }
          for(int var8 = 0; var8 < 12; var8 += 2) {
             int var7 = var0 + nB[var0 & 1][var8];
@@ -4180,6 +4185,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
          int var3 = var0 + nB[var0 & 1][var4];
          int var2 = var1 + nB[var0 & 1][var4 + 1];
          vb[var2][var3] = 2;
+         vb2[var2][var3] = 5;
          if(var3 > 0 && var3 < oA - 1 && var2 > 0 && var2 < pA - 1 && rA[2][var2][var3] == 12 && yb[var2][var3] != 1) {
             F(var3, var2);
             yb[var2][var3] = 1;
