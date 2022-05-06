@@ -7,6 +7,7 @@
 //TODO: Сделать инерцию при смещении экрана курсором
 //TODO: Самолет не атакует , когда под ним враг (если не лететь - стоять на месте)
 //TODO: Сделать показ зоны куда можно ходить как в Panzer General (прозрачными)
+//FIXME: Устранить желтую зону при выделении у всех юнитов (надо только у одного)
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
@@ -1364,7 +1365,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
          }
       }
    }
-//INFO: Прорисовка местности в игре
+//------ Прорисовка местности в игре
    public static void B(Graphics var0, int var1, int var2, int var3, int var4) {
       int var8 = var3;
       int var9 = var3;
@@ -1397,16 +1398,16 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
                      A(var0, 3, rA[1][var5][var7], var8 + offset_x, var6 + offset_y);
                   }
 
-                  if(var3 == 1) {
+                  if(var3 == 1 && var9 != 4) {
                      A(var0, 6, 1, var8 + offset_x, var6 + offset_y);   //закраска серым места куда можно ходить (на черных гексах)
                   }  
                   if(var3 == 3) {
                      A(var0, 6, 3, var8 + offset_x, var6 + offset_y);   //закраска красным
                   }
-                  if(var9 == 4) {
-                     A(var0, 6, 2, var8 + offset_x, var6 + offset_y);   //закраска желтым
-                     //vb2[var5][var7] = 2;   //возвращаем гекс без закраски
+                  if(var9 == 4 && var3 != 2) {
+                     A(var0, 6, 2, var8 + offset_x, var6 + offset_y);   //закраска желтым, на видимых гексах
                   }
+
                }
                //Закрашивание черными квадратами сторон карты местности
                if(var7 == 1) {
@@ -1445,9 +1446,8 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
       int var7;
       int var8;
       int var11;
-      if (alpha_pos == true)  {
-        alpha_pos = false; 
-      } else {
+      alpha_pos = false;
+      if (var3 != null)  {
         alpha_pos = true; 
       }
       for(var11 = 0; var11 < var0.length; ++var11) {
@@ -1475,9 +1475,10 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
 
             yb = new int[pA][oA];
             A(var7, var6, var4, 2, var5); //видимая территория вокруг своих юнитов
+            
          }
       }      
-
+      
       if(var3 != null) {
          var8 = var3[1];
          var7 = var3[2];
@@ -4147,16 +4148,16 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
 
       return 0;
    }
-//Ставит видимую территорию
+//------ Ставит видимую территорию
    static void A(int var0, int var1, int var2, int var3, int var4) {
       if(var2 >= 0) {
           
          vb[var1][var0] = var3;
-         if (var3 == 2 && alpha_pos == false) {
+         if (var3 == 2 && alpha_pos == true) {
             vb2[var1][var0] = 4;    
-         }  
-         if (var3 == 1 && alpha_pos == true) {
-            vb2[var1][var0] = 0;    
+         }
+         if (var3 == 2 && alpha_pos == false) {
+            vb2[var1][var0] = 2;    
          }
          for(int var8 = 0; var8 < 12; var8 += 2) {
             int var7 = var0 + nB[var0 & 1][var8];
