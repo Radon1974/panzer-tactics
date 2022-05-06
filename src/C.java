@@ -1459,6 +1459,11 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
          yb = new int[pA][oA];
          F(var0[var11][1], var0[var11][2]);   //видимая территория вокруг своих городов
       }
+      
+      for(var11 = 0; var11 < var1.length; ++var11) {
+         yb = new int[pA][oA];
+         F(var1[var11][1], var1[var11][2]);   //видимая территория вокруг своих аэродромов
+      }
 
       for(var8 = 0; var8 < var2.length; ++var8) {
          if(var3 != var2[var8]) {
@@ -4179,6 +4184,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
 //INFO: Ставит видимую территорию вокруг занятых городов
    static void F(int var0, int var1) {
       vb[var1][var0] = 2;
+      vb2[var1][var0] = 5;
       yb[var1][var0] = 1;
 
       for(int var4 = 0; var4 < 12; var4 += 2) {
