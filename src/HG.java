@@ -122,6 +122,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
    static int checkmark_y = 0;
    static boolean popup_menu = false;   //триггер всплывающего меню
    static int[] sens_menu = new int[50];
+   static int test = 0;
 
    public static InputStream A(String var0) throws NullPointerException {
       DataInputStream var1 = null;
@@ -141,7 +142,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
          return var1;
       }
    }
-
+//------ Разбивает сообщение на несколько строк
    public static String[] A(String var0, Font var1, int var2, int var3) {
       var0.length();
       int var11 = 0;
@@ -364,7 +365,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
 
       return var7;
    }
-
+//------ Многопользовательская игра
    public static final boolean A(int var0) {
       RecordStore var1;
       try {
@@ -910,7 +911,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
          }
       }
    }
-//Извлечение сообщений из библиотеки
+//------ Извлечение сообщений из библиотеки
    public static String H(int var0) {
       String var3 = "";
       int var2 = var0 & '\uffff';
@@ -1028,7 +1029,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
       }
 
    }
-//Звук
+//------ Звук
    public static void J(int var0) {
       Player var5 = null;
       int var4 = Q(var0);
@@ -1465,7 +1466,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
       }
 
    }
-//Воспроизведение звука
+//------ Воспроизведение звука
    public static void I() {
       if(ja >= 0) {
          Q(ja);
@@ -2579,7 +2580,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
       }
 
    }
-//INFO: Купить технику, рекрутировать офицеров
+//------ Купить технику, рекрутировать офицеров (разные пункты меню)
    public static void S(int var0) {
       int var1;
       int var2;
@@ -2908,7 +2909,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
 
       return var4;
    }
-//Заставка
+//------ Заставка
    public static int A(Graphics var0) {
       int var8;
       int var9;
@@ -2959,9 +2960,10 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
 
       return var8;
    }
-//Обработка пунктов меню
+//------ Обработка пунктов меню
    static void T(int var0) {
       int var1;
+      test = var0;  //для отладки
       switch(var0) {
       case 1:
          C.ab = sa[ua][(va << 2) + 3];
@@ -3229,58 +3231,71 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
 
          T(24);
          break;
-      case 38:
-      case 39:  //сценарий???
-         var1 = sa[ua][(va << 2) + 3];
-         C.ab = C.aa[var1][2];
-         if(var0 == 38) {
-            if(C.aa[var1][3] == 1 && A(5)) {
-               C(393328, 82, 38);
-               A(4, -1, 0, true);
-               break;
-            }
-         } else if(A(6)) {
-            C(393328, 82, 39);
-            A(4, -1, 0, true);
+      case 38:  //сценарии
+      case 39:  //многопользовательская игра
+         var1 = sa[ua][(va << 2) + 3];  //номер сценария
+         C.ab = C.aa[var1][2];  //порядок следования сценария (0 - 5)???
+         if(var0 == 38 && C.aa[var1][3] == 1) {
+            C(393328, 82, 38);  //всплывающее меню
+            A(4, -1, 0, true);  //
+            break;
+            
+         } else if(var0 == 39) {
+            C(393328, 82, 39);  //всплывающее меню
+            A(4, -1, 0, true);  //
             break;
          }
+         break;         
+// Исходный файл сценария и многопользовательской игры
+//          if(var0 == 38) {
+//            if(C.aa[var1][3] == 1 && A(5)) {  //разрешен ли сценарий?
+//               C(393328, 82, 38);  //
+//               A(4, -1, 0, true);
+//               break;
+//            }
+//         } else if(A(6)) {
+//            C(393328, 82, 39);  //
+//            A(4, -1, 0, true);
+//            break;
+//         }        
+
       case 40:
          ta = false;
          ib.removeAllElements();
          GA(29);
          fb = true;
          break;
-      case 41:
+      case 41:  //кампания Фашистского Блока
          if(C.H(2)) {
             aA.push(new Integer(ua));
             aA.push(new Integer(va));
             aA.push(new Integer(oa));
-            AA(13);
+            AA(13); //цифры выбора кампании
          } else {
             T(1);
          }
          break;
-      case 42:
+      case 42:  //кампания Советского Союза
          if(C.H(3)) {
             aA.push(new Integer(ua));
             aA.push(new Integer(va));
             aA.push(new Integer(oa));
-            AA(14);
+            AA(14); //цифры выбора кампании
          } else {
             T(1);
          }
          break;
-      case 43:
+      case 43:  //кампания Западных Союзников
          if(C.H(4)) {
             aA.push(new Integer(ua));
             aA.push(new Integer(va));
             aA.push(new Integer(oa));
-            AA(15);
+            AA(15); //цифры выбора кампании
          } else {
             T(1);
          }
          break;
-      case 44:
+      case 44:  //тренировка
          var1 = sa[ua][(va << 2) + 3];
          if(var0 != 38 || C.aa[var1][3] == 1) {
             if(C.c) {
@@ -3300,6 +3315,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
             C.A(13);
             ta = false;
          }
+         break;
       }
 
    }
@@ -3445,7 +3461,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
 
       return var1;
    }
-//Извлечение текстовых сообщений из библиотеки
+//------ Извлечение текстовых сообщений из библиотеки
    static String D(int var0, int var1) {
       int[] var2 = sa[var0];
       var0 = var2[(var1 << 2) + 0];
@@ -3514,7 +3530,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
          }
       }
    }
-//Перемещение по Главному Меню вниз
+//------ Перемещение по Главному Меню вниз
    static void M() {
       boolean var0 = W(ua) > 0;
       if(var0) {
@@ -3537,7 +3553,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
       }
 
    }
-//Перемещение по Главному Меню вверх
+//------ Перемещение по Главному Меню вверх
    static void N() {
       boolean var0 = W(ua) > 0;
       if(var0) {
@@ -3559,7 +3575,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
       }
 
    }
-//Перемещение по Главному Меню вниз
+//------ Перемещение по Главному Меню вниз
    static void M1() {
       boolean var0 = W(ua) > 0;
       if(var0) {
@@ -3581,7 +3597,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
       }
 
    }
-//Перемещение по Главному Меню вверх
+//------ Перемещение по Главному Меню вверх
    static void N1() {
       boolean var0 = W(ua) > 0;
       if(var0) {
@@ -3603,7 +3619,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
       }
 
    }   
-//Скролинг экрана вниз
+//------ Скролинг экрана вниз
    public static void O() {
       if(pa > fA) {
          oa -= 40;
@@ -3613,7 +3629,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
       }
 
    }
-//Скролинг экрана вверх
+//------ Скролинг экрана вверх
    public static void P() {
       oa += 40;
       if(oa > 0) {
@@ -3621,7 +3637,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
       }
 
    }
-//Скролинг экрана вниз
+//------ Скролинг экрана вниз
    public static void O1() {
       if(pa > fA) {
          oa -= 2;
@@ -3631,7 +3647,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
       }
 
    }
-//Скролинг экрана вверх
+//------ Скролинг экрана вверх
    public static void P1() {
       oa += 2;
       if(oa > 0) {
@@ -3639,7 +3655,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
       }
 
    }   
-//INFO: Пункты меню (определение)
+//------ Пункты меню (определение)
    static void Q() {
       if(va >= 0) { //пункты меню
          int[] var2 = sa[ua];
@@ -3656,7 +3672,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
             break;
          case 101:
          case 107:
-            T(var7);
+            T(var7);    //переход в сценарии
             break;
          case 102:
             int var6 = -1;
@@ -3709,7 +3725,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
       }
 
    }
-//INFO: Загрузка в меню пунктов (рекрутировать, купить и т.д.)
+//------ Загрузка в меню пунктов (рекрутировать, купить и т.д.)
    static void Y(int var0) {
       oa = 0;
       bA = 0;
@@ -3813,7 +3829,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
          case 188:
          case 189:
          case 198:
-            sA[var7] = A(D(var0, var5), C.i[2], dA - cA, 0);
+            sA[var7] = A(D(var0, var5), C.i[2], dA - cA, 0);    //обработка текстового сообщения
             var11 = var7++;
             break;
          case 199:
@@ -3822,7 +3838,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
             var11 = var7++;
             break;
          }
-
+         //Вывод сообщения на экран
          pa += A((Graphics)null, var5, var12, var9, var11, 0, var10, var8[(var5 << 2) + 1], var8[(var5 << 2) + 3]);
       }
 
@@ -3844,7 +3860,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
       }
 
    }
-//Обнуление сообщений меню
+//------ Обнуление сообщений меню
    static void Z(int var0) {
       uA = null;
       rA = null;
@@ -3853,7 +3869,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
    }
 
    static void R() {}
-//Заставка для меню игры (вывод фона карты из игры) и рисование пунктов меню
+//------ Заставка для меню игры (вывод фона карты из игры) и рисование пунктов меню
    static void B(Graphics var0) {
       if(ua != -1) {
          int[] var10 = sa[ua];
@@ -3896,7 +3912,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
          za = false;
       }
    }
-//Проверка и обнуление скролинга экрана
+//------ Проверка и обнуление скролинга экрана
    public static void A(int var0, int var1, int var2) {
       var2 = pa - fA;
       var0 = bA + fA + oa - var1 - var0;
@@ -3941,7 +3957,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
       }
 
    }
-//INFO: Гексовое меню в игре
+//------ Гексовое меню в игре
    public static int[] B(int var0, int var1, int var2) {
       int[] var3 = new int[]{var0, var1};
       switch(var2) {
@@ -3995,7 +4011,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
          return var5;
       }
    }
-//Показ пунктов меню
+//------ Показ пунктов меню
    static void BA(int var0) {
       int var1;
       int var2;
@@ -4521,8 +4537,8 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
          break;
       case 35:
          if((C.zA & 15) != 3) {
-            ta = false;
-            fb = false;
+            ta = false; //выйти из главного меню
+            fb = false; //выйти из гексового меню
             C.uA[0] = C.uA[1];
             C.A(14);
          }
@@ -4583,6 +4599,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
 
             C.uB[var0][0] = 0;
          }
+         break;
       }
 
    }
@@ -4625,7 +4642,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
       eb[25][1] = var2;
       eb[25][0] = var0;
       eb[25][4] = var1;
-      GA(25);
+      GA(25);   //всплывающее меню
       fb = true;
    }
 
@@ -4691,15 +4708,15 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
       }
 
    }
-//Выбор действия, если нажата кнопка в пункте меню
+//------ Выбор действия, если нажата кнопка в пункте меню
    static void V() {
       if(hb >= 0) {
          int[] var3 = eb[gb];   //пункты меню
          int var2 = hb * 4;     //пункт меню (1..6) умножаем на 4
-         int var1 = var3[var2 + 1]; //сообщения: 19 - нападение, 36 - закончить раунд
-         int var0 = var3[var2 + 2]; //10 - закончить раунд, 81 - обычный режим, 84 - рекрутировать
+         int var1 = var3[var2 + 1]; //сообщения: 19 - нападение, 36 - закончить раунд, 38 - всплывающее сообщение
+         int var0 = var3[var2 + 2]; //10 - показать всплывающее меню, 81 - обычный режим, 84 - рекрутировать
          switch(var0) {
-         case 10:   //закончить раунд var1=36
+         case 10:   //закрыть всплывающее меню
             BA(var1);
             break;
          case 18:
@@ -4727,7 +4744,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
       }
 
    }
-
+//------ Вывод сообщения всплывающего меню
    static void EA(int var0) {
       vA = (C.pa[C.db] - C.la + 1) * 45 + -23 + C.offset_x;
       //vA = (C.pa[C.db] - C.la + 1) * 25 + -23;
@@ -4905,7 +4922,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
       lb = 0;
       popup_menu = false;   //триггер всплывающего меню (закрытие окна)
    }
-//INFO: Вывод курсора гексового меню на экран
+//------ Вывод курсора гексового меню на экран
    static void C(Graphics var0) {
       if(gb != -1) {
          int[] var10 = eb[gb];
@@ -5028,13 +5045,13 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
       }
 
    }
-//Всплывающее меню
+//------ Всплывающее меню
    static void GA(int var0) {
       FA(gb);
       gb = var0;
       EA(var0);
    }
-//Чтение файла /mi
+//------ Чтение файла /mi
    public static void W() {
       InputStream var3 = null;
       nb = null;
@@ -5086,7 +5103,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
 
       return var1;
    }
-//Загрузка заставки игры
+//------ Загрузка заставки игры
    public HG() {
       qb = this;
       if(pb == null) {
@@ -5109,11 +5126,11 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
       }
 
    }
-//выход из игры
+//------ выход из игры
    public void destroyApp(boolean var1) {
       this.notifyDestroyed();
    }
-//Пауза в игре
+//------ Пауза в игре
    public void pauseApp() {
       if(pb != null) {
          C.X();

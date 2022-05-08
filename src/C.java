@@ -1,13 +1,24 @@
 //TODO: Модернизировать графику юнитов на графику Panzer General - выполняется
 //TODO: Улучшить графику курсора при выводе на экран, а также графику гексового меню
-//TODO: При перемещении курсора не выводится названия места (юнита) под гексом
-//TODO: Сместить прицел при наведении на противника во время боя
-//TODO: При рекрутировании техники в конце списка выдает не то всплывающее окно с текстом
-//TODO: Звездочки нанимаемого офицера сместить (офицер на юните)
+//TODO: Сделать передвижение грузовиков как в PG Forever (автоматическая погрузка при ходе на большее расстояние)
+//TODO: Сделать модернизацию юнитов
 //TODO: Сделать инерцию при смещении экрана курсором
-//TODO: Самолет не атакует , когда под ним враг (если не лететь - стоять на месте)
-//TODO: Сделать показ зоны куда можно ходить как в Panzer General (прозрачными)
-//FIXME: Устранить желтую зону при выделении у всех юнитов (надо только у одного)
+//TODO: Убрать кол-во ходов (вообще избавится)
+//TODO: Запретить просачивание сквозь свои войска (уничтожают артиллерию)
+//TODO: Сделать обводку вокруг края карты
+//TODO: Заменить уменьшенные значки самолетов и техники над гексами юнитов (мелковатые слишком)
+//FIXME: При перемещении курсора не выводится названия места (юнита) под гексом
+//FIXME: Сместить прицел при наведении на противника во время боя
+//FIXME: При рекрутировании техники в конце списка выдает не то всплывающее окно с текстом
+//FIXME: Звездочки нанимаемого офицера сместить (офицер на юните)
+//FIXME: Самолет не атакует , когда под ним враг (если не лететь - стоять на месте)
+//FIXME: Доступны все сценарии и многопользовательские игры. Не возможно начать любую другую миссию, кроме первой при соблюдении условий, как в исходнике
+//FIXME: При лечении не снимается выделение хода (места куда передвигаться)
+//FIXME: Не всегда находит юнита который еще не перемещался
+//FIXME: Плохо видно какой не сходил юнит (применить цвета)
+//FIXME: Временно сделать работу всех сценариев
+//ERROR: Не работает миссия Суэцкий канал в сценарии Кампании Фашистского Блока и т.д. (не работают сценарии, которые не пройдены)
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
@@ -51,7 +62,7 @@ public class C extends Canvas implements Runnable {
    static Image[] x;
    static boolean[] y = new boolean[180];
    static final int[][] z = new int[][]{{1, 1, 1, 1, 16, 1, 1, 16, 0, 393288}, {1, 2, 1, 1, 16, 1, 1, 16, 0, 393285}, {2, 2, 2, 1, 16, 1, 1, 16, 1, 393283}, {2, 3, 2, 2, 16, 1, 1, 16, 2, 393282}, {2, 3, 3, 3, 16, 1, 1, 16, 3, 393284}, {3, 16, 16, 16, 16, 1, 16, 16, 0, 393286}, {2, 3, 2, 3, 16, 1, 1, 16, 0, 393289}, {1, 3, 1, 2, 16, 1, 1, 16, 0, 393281}, {2, 3, 1, 2, 16, 1, 1, 1, 0, 393278}, {16, 16, 16, 16, 16, 1, 1, 16, 0, 393280}, {16, 16, 16, 16, 1, 1, 16, 1, 0, 393287}, {1, 2, 3, 2, 16, 1, 1, 16, 3, 393277}, {1, 1, 2, 1, 16, 1, 1, 16, 3, 393279}, {16, 16, 16, 16, 16, 16, 16, 16, 0, 5}};
-   static int[][] aa = new int[][]{{55, 0, 0, 0}, {58, 1, 0, 0}, {59, 1, 0, 0}, {60, 1, 0, 0}, {61, 2, 0, 0}, {62, 2, 0, 0}, {63, 2, 0, 0}, {57, 3, 0, 0}, {64, 3, 0, 0}, {65, 3, 0, 0}, {56, 3, 0, 0}, {66, 3, 1, 0}, {69, 4, 1, 0}, {70, 4, 1, 0}, {71, 5, 1, 0}, {72, 5, 1, 0}, {73, 5, 1, 0}, {74, 5, 1, 0}, {75, 6, 1, 0}, {76, 6, 1, 0}, {67, 6, 1, 0}, {68, 6, 1, 0}, {44, 4, 2, 0}, {47, 5, 2, 0}, {48, 5, 2, 0}, {49, 5, 2, 0}, {50, 5, 2, 0}, {51, 5, 2, 0}, {52, 5, 2, 0}, {53, 5, 2, 0}, {54, 5, 2, 0}, {45, 6, 2, 0}, {46, 6, 2, 0}, {41, 0, 3, 1}};
+   static int[][] aa = new int[][]{{55, 0, 0, 1}, {58, 1, 0, 1}, {59, 1, 0, 1}, {60, 1, 0, 1}, {61, 2, 0, 1}, {62, 2, 0, 1}, {63, 2, 0, 1}, {57, 3, 0, 1}, {64, 3, 0, 1}, {65, 3, 0, 1}, {56, 3, 0, 1}, {66, 3, 1, 1}, {69, 4, 1, 1}, {70, 4, 1, 1}, {71, 5, 1, 1}, {72, 5, 1, 1}, {73, 5, 1, 1}, {74, 5, 1, 1}, {75, 6, 1, 1}, {76, 6, 1, 1}, {67, 6, 1, 1}, {68, 6, 1, 1}, {44, 4, 2, 1}, {47, 5, 2, 1}, {48, 5, 2, 1}, {49, 5, 2, 1}, {50, 5, 2, 1}, {51, 5, 2, 1}, {52, 5, 2, 1}, {53, 5, 2, 1}, {54, 5, 2, 1}, {45, 6, 2, 1}, {46, 6, 2, 1}, {41, 0, 3, 1}};   //сценарии (номер сценария, ?, нация игрока (0 - Германия, 1 - СССР, 2 - союзники, 3 - ???), доступность (1 - доступно)
    static final int[] ba = new int[]{4, 4, 4, 4, 4, 4, 4, 4, 4, 3, 3, 3, 3, 3, 2, 2, 2, 2, 11, 11, 11, 11, 12, 12, 12, 12, 12, 12, 12, 6, 1, 1, 1, 1, 1, 9};
    static final int[] ca = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 0, 0, 0, 0, 0, 10, 8, 8, 8, 9, 8, 8, 9, 8, 8, 9, 9, 9, 9, 9, 9, 8, 8, 9, 9, 8, 9, 8, 9, 9, 9, 9, 8, 8, 8, 8, 8, 8};
    static int[][] da = (int[][])null;	//юниты в библиотеке
@@ -180,15 +191,16 @@ public class C extends Canvas implements Runnable {
    static int offset_x = 0;
    static int offset_y = 0;
    static boolean alpha_pos = false;
+   static int test = 0;
 
-//Режим работы программы
+//------ Режим работы программы
    public static void A(int var0) {
       p = o;
       B();
       o = var0;
       A();
    }
-//INFO: Исполнение режимов работы программы
+//------ Исполнение режимов работы программы
    public static void A() {
       q = false;
       if(fa != null) {
@@ -286,7 +298,7 @@ public class C extends Canvas implements Runnable {
 
             fA = A(pa[db], qa[db], 1, 3);
             var6 = db == 0?va:ta;
-            A(db == 0?vA:wA, db == 0?xA:yA, db == 0?ta:va, (int[])null);
+            A(db == 0?vA:wA, db == 0?xA:yA, db == 0?ta:va, (int[])null);    //A(db == 0?vA:wA, db == 0?xA:yA, db == 0?ta:va, null);
 
             for(iA = 0; iA < var6.length; ++iA) {
                var6[iA][15] = 0;
@@ -358,7 +370,7 @@ public class C extends Canvas implements Runnable {
                }
             } while(!var3);
 
-            A(db ^ 1, (int[])null);
+            A(db ^ 1, (int[])null); //A(db ^ 1, null);
          }
       }
 
@@ -404,7 +416,7 @@ public class C extends Canvas implements Runnable {
 
             for(iA = 0; iA < var4.length; ++iA) {
                if(var4[iA][4] != var1) {
-                  uA[var1] += 100;
+                  uA[var1] += 100;   //???
                }
             }
 
@@ -412,14 +424,14 @@ public class C extends Canvas implements Runnable {
 
             for(iA = 0; iA < var4.length; ++iA) {
                if(var4[iA][4] != var1) {
-                  uA[var1] += 50;
+                  uA[var1] += 50;   //???
                }
             }
          }
       }
 
    }
-
+//------ Работа программы ???
    public static void C() {
       if(q) {
          R();
@@ -616,7 +628,7 @@ public class C extends Canvas implements Runnable {
                            HG.L(14);
                            HG.GA(18);
                            HG.fb = true;
-                           break label471;
+                           break label471;  //break
                         }
 
                         M(dA);
@@ -667,11 +679,11 @@ public class C extends Canvas implements Runnable {
             }
          }
 
-         if(!HG.fb && rb) {
+         if(!HG.fb && rb) { //нет входа в гексовое меню
             pb = false;
-            HG.AA(sb);
+            HG.AA(sb);  //загрузка сообщения
             HG.aA.removeAllElements();
-            HG.ta = true;
+            HG.ta = true;   //режим Главного Меню
             if(ha >= 0) {
                HG.sa[35][7] = ha;
                HG.sa[35][8] = ga;
@@ -694,12 +706,13 @@ public class C extends Canvas implements Runnable {
       }
 
    }
+   
 protected void pointerPressed(int var_x, int var_y) {
      sens_x3 = var_x;
      sens_y3 = var_y;
  
 }   
-//Перемещение курсора или сенсорного ввода
+//------ Перемещение курсора или сенсорного ввода
 protected void pointerDragged(int var_x, int var_у) {
   if(!HG.fb && !HG.popup_menu) {
     if(HG.ta) {
@@ -751,7 +764,7 @@ protected void pointerDragged(int var_x, int var_у) {
   }
 }
         
-//INFO: Нажатие мыши или сенсорного ввода   
+//------ Нажатие мыши или сенсорного ввода   
 protected void pointerReleased(int var_x, int var_y) {
   sens_x = var_x;
   sens_y = var_y;
@@ -808,8 +821,8 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
         k = 0L;
      }   
   if(o != 12 && o != 1 && j == null && var_y >= g - 34) { //нажат правый софт (выход в предыдущее меню) нижняя полоска в игре
-        u[17] = 20;
-        v[17] = 0;
+        u[5] = 20;
+        v[5] = 0;
      } else {
         k = 0L;
   }
@@ -964,7 +977,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
  }  
 }   
 
-//Обработка клавиш клавиатуры (нажатых)
+//------ Обработка клавиш клавиатуры (нажатых)
    protected void keyPressed(int var1) {	//обработка нажатий клавиш
       key =  var1;
       D();
@@ -1044,7 +1057,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
    }
 
    protected void keyRepeated(int var1) {}
-//Обработка клавиш клавиатуры (отпущенных)
+//------ Обработка клавиш клавиатуры (отпущенных)
    protected void keyReleased(int var1) {	//обработка опускания клавиш
       switch(var1) {
       case -7:  //правый софт
@@ -1167,7 +1180,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
 
       return var3;
    }
-//Обработка нажатий клавиш (для навигации по меню)
+//------ Обработка нажатий клавиш (для навигации по меню)
    static boolean C(int var0) {
       boolean var1 = false;
       var0 = B(var0);
@@ -1227,7 +1240,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
 
       return var2;
    }
-//Определение размера отдельной картинки из файла ".png"
+//------ Определение размера отдельной картинки из файла ".png"
    public static void G() {
       if(x == null) {
          x = new Image[180];
@@ -1263,7 +1276,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
       }
 
    }
-//Вывод курсора на холст, заставки, очистка экрана
+//------ Вывод курсора на холст, заставки, очистка экрана
    public static void A(Graphics var0, int var1, int var2, int var3, int var4) {
       if(var1 < 180) {
          if(x[var1] != null) {
@@ -1310,7 +1323,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
          }
       }
    }
-//Вывод трапецеидальных кнопок меню (главное меню)
+//------ Вывод трапецеидальных кнопок меню (главное меню)
    public static void A(Graphics var0, int var1, int var2, int var3, int var4, int var5, int var6, int var7, int var8) {
       if(var1 < 180) {
          if(x[var1] != null) {
@@ -1405,7 +1418,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
                   }
                   
                   if(var3 == 3) {
-                     A(var0, 6, 3, var8 + offset_x, var6 + offset_y);   //закраска красным
+                     A(var0, 6, 3, var8 + offset_x, var6 + offset_y);   //закраска красным, расстановка купленной техники
                   }
                   if(var9 == 5 && var3 == 1) {
                      A(var0, 6, 2, var8 + offset_x, var6 + offset_y);   //закраска желтым, на видимых гексах и городах (заместо серых гексов)
@@ -2716,7 +2729,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
       }
 
    }
-
+//------ Вывод всего на карту местности
    public static void A(Graphics var0, int var1) {
       if((var1 & 1) == 1) {
          for(int var2 = 0; var2 < ta.length; ++var2) {
@@ -2739,7 +2752,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
       }
 
    }
-//INFO: Вывод юнитов и прочего на карту местности
+//------ Вывод юнитов и прочего на карту местности
    static void A(Graphics var0, int[] var1) {
       int var3 = var1[1];
       int var2 = var1[2];
@@ -4181,7 +4194,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
 
       }
    }
-//INFO: Ставит видимую территорию вокруг занятых городов
+//------ Ставит видимую территорию вокруг занятых городов
    static void F(int var0, int var1) {
       vb[var1][var0] = 2;
       vb2[var1][var0] = 5;
@@ -5285,7 +5298,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
 
       return false;
    }
-//INFO: Вывод курсора с координатами Y(var2), X(var3) и смещение от начала экрана (var4, var5)
+//------ Вывод курсора с координатами Y(var2), X(var3) и смещение от начала экрана (var4, var5)
    public static void A(Graphics var0, int var1, int var2, int var3, int var4, int var5) {
       if(dA != null && !gA && !HG.fb) {
        A(var0, 6, 2, (dA[1] - la) * 45 + -23 + offset_x, (dA[2] - ma) * 50 + ((dA[1] & 1) == 1?25:0) + -16 + offset_y);
@@ -5301,7 +5314,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
       }
 
    }
-//INFO: Вывод стрелки при построении маршрута перемещения юнита
+//------ Вывод стрелки при построении маршрута перемещения юнита
    static void A(Graphics var0) {
       int var7 = 0;
 
@@ -5352,7 +5365,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
       }
 
    }
-//INFO: Вывод нижней информационной панели на карте
+//------ Вывод нижней информационной панели на карте
    static void B(Graphics var0) {
       var0.setClip(0, 0, f, g);
       int var5 = 33 / HG.ob[18][4] + 1;
@@ -5588,7 +5601,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
       }
 
    }
-//INFO: Вывод верхней информационной панели на карте
+//------ Вывод верхней информационной панели на карте
    static void C(Graphics var0) {
       var0.setClip(0, 0, f, g);
       int var5 = (HG.ob[12][4] + 1) / HG.ob[18][4] + 1;
@@ -5625,7 +5638,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
       C(var0, uA[db], f - (2 + HG.ob[33][3] + HG.ob[11][3] + 2), 5, 1); //вывод очков престижа в инфопанели
       A(var0, 33, 0, f - HG.ob[33][3] - 2, 0);    //вывод венка около очков престижа в инфопанели
    }
-//INFO: Вывод флагов нации на гексах
+//------ Вывод флагов нации на гексах
    static void D(Graphics var0) {
       int var4 = 8 - HG.ob[5][4];
 
@@ -5684,7 +5697,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
       var0.setColor(h[36]);
       HG.A(HG.H(78) + " - " + HG.H(79) + ": " + HG.H(327707), 2, 1, var0, 0, h[36], h[37]);
    }
-//INFO: Вывод силы юнита на иконке
+//------ Вывод силы юнита на иконке
    static void C(Graphics var0, int var1, int var2, int var3, int var4) {
       if(var1 < 0) {
          var1 *= -1;
@@ -5799,7 +5812,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
       A(var0, 18, 1, var1, var6);
       return var5;
    }
-//Вывод стратегической карты
+//------ Вывод стратегической карты
    static void B(Graphics var0, int var1) {
       var0.setClip(0, 0, f, g);
       var0.setColor(h[11]);
@@ -5937,7 +5950,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
    public static int K(int var0) {
       return i[var0].getHeight();
    }
-//Вывод строки текста в меню, брифинге и игре
+//------ Вывод строки текста в меню, брифинге и игре
    public static void A(Graphics var0, String var1, int var2, int var3, int var4, int var5, int var6, int var7, int var8) { //вывод текста из var1
       if(var1 != null) {
          var3 -= 3;
@@ -6197,6 +6210,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
                break;
             case 81:
                var9 = var12[var11++] << 16 & 16711680 | var12[var11++] << 8 & '\uff00' | var12[var11++] & 255;
+               break;
             }
          }
 
@@ -6832,7 +6846,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
       }
 
    }
-
+//------ Рисование на картинке разных линий
    public static void H(Graphics var0) {
       if(lA[0] == 2) {
          var0.setClip(0, 0, f, g);
@@ -7084,7 +7098,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
       f = this.getWidth();
       g = this.getHeight();
    }
-//INFO: Вывод картинки на заставке
+//------ Вывод картинки на заставке
    public void paint(Graphics var1) {   //рисование картинки игры
       int var2;
       int var3;
@@ -7282,8 +7296,8 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
                   A(var1);
                }
 
-               A(var1, 3);
-               D(var1);
+               A(var1, 3);  //вывод всего на карту игры (картинки)
+               D(var1); //вывод флагов нации
                if(kB) {
                   G(var1);
                }
@@ -7374,7 +7388,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
       }
 
    }
-//Переход по пунктам в игровом меню
+//------ Переход по пунктам в игровом меню
    void V() {
       if(C(10)) {
          if(c) {
@@ -7463,7 +7477,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
                }
 
                if(C(31)) {
-                  switch(HG.ua) {
+                  switch(HG.ua) { //проверить переход, возможно старт сценария
                   case 29:
                      HG.T(36);
                      break;
@@ -7488,6 +7502,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
                         HG.aA.push(new Integer(HG.oa));
                         HG.AA(29);
                      }
+                     break;
                   }
                }
             } else if(C(12) && o == 18) {
@@ -7887,12 +7902,12 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
    }
 
    public void showNotify() {}
-//Выход из режима паузы
+//------ Выход из режима паузы
    public static void W() {
       c = false;    //вышел из режима паузы
       HG.K();
    }
-//Переход в режим паузы
+//------ Переход в режим паузы
    public static void X() {
       if(o != 12 && o != 1) {
          HG.A(2, -1, 0, true);
@@ -7906,7 +7921,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
       }
 
    }
-//Игровой цикл прорисовки
+//------ Игровой цикл прорисовки
    public void run() {
       while (b) { //for(; b; d = System.currentTimeMillis()) {
           
@@ -7951,12 +7966,12 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
       }
 
    }
-//Изменение размера экрана
+//------ Изменение размера экрана
    public void sizeChanged(int var1, int var2) {
       f = var1;
       g = var2;
    }
-//Создание потоков
+//------ Создание потоков
    public void G(int var1, int var2) {
       Runtime.getRuntime();
       HG.E();

@@ -1,4 +1,4 @@
-
+//------ Старт игры
 public class A extends Thread {
 
    C a;
