@@ -2694,8 +2694,8 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
          break;
       case 31:  //техника
          var2 = 0;
-         var0 = (C.db == 0)?C.ra:C.sa;    //var0 = ((C.db == 0)?C.ra:C.sa);
-         int var10 = var0 == 2?12:(var0 != 6 || var0 != 0?10:11);
+          var0 = (C.db == 0)?C.ra:C.sa;    //var0 = ((C.db == 0)?C.ra:C.sa);
+         int var10 = var0 == 2?12:(var0 == 6 || var0 == 0?10:11);
 
          Vector var12;
          var12 = new Vector();
@@ -2752,11 +2752,13 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
          var7[5] = 27;
          var7[6] = 66;
          var7[7] = 2;
+         //sa[31] = var7; //отладка
          break;
       case 32:  //офицеры
          var1 = 0;
-         var4 = (C.db == 0)?C.ra:C.sa;
-         int[][] var6 = (C.db == 0)?C.ta:C.va;
+
+         var4 = C.db == 0?C.ra:C.sa;
+         int[][] var6 = C.db == 0?C.ta:C.va;
          int[] var11 = new int[3];;
          
          while (var1 < var6.length) {
@@ -2845,10 +2847,11 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
       case 38:
       case 39:
          var0 = C.db == 0?C.ra:C.sa;
-         var0 = var0 == 2?12:(var0 != 6 && var0 != 0?11:10);
+         var0 = var0 == 2?12:(var0 == 6 || var0 == 0?10:11);
          sa[ua][4] = C.db == 0?393293:393295;
          sa[ua][3] = var0;
          C.zA |= 16;
+         break;
       }
 
    }
@@ -3196,12 +3199,15 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
          }
 
          var0 = C.db == 0?C.ra:C.sa;
-         boolean var4 = var0 == 2?true:(var0 != 6 && var0 != 0?true:true);
+         int var4 = var0 == 2?12:(var0 == 6 || var0 == 0?10:11);
+         //boolean var4 = var0 == 2?true:(var0 != 6 && var0 != 0?true:true);
          var0 = var2[19];
-         if(var0 >= 0 && C.ub == -1 && (C.da[var0][1] == 2?true:(C.da[var0][1] != 6 && C.da[var0][1] != 0?true:true)) == var4) {
+         if(var0 >= 0 && C.ub == -1 && (C.da[var0][1] == 2?12:(C.da[var0][1] == 6 || C.da[var0][1] == 0?10:11)) == var4) {
             C.ub = var2[0];
          }
-
+         //if(var0 >= 0 && C.ub == -1 && (C.da[var0][1] == 2?true:(C.da[var0][1] != 6 && C.da[var0][1] != 0?true:true)) == var4) {
+         //   C.ub = var2[0];
+         //}
          if(var0 >= 0 && C.ub == var2[0]) {
             if(C.ub >= 0) {
                var2[19] = var2[0];
@@ -3764,11 +3770,11 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
          case 198:
          case 199:
             ++var4;
-            break;
-         //default:
-         //   rA[var2] = D(var0, var2);   //выводимые на экран сообщения
+         //   break;
+         default:
+            rA[var2] = D(var0, var2);   //выводимые на экран сообщения
          }
-         rA[var2] = D(var0, var2);   //выводимые на экран сообщения
+         //rA[var2] = D(var0, var2);   //выводимые на экран сообщения
          if(var1 > 99 && var1 < 150) {
             if(wa == -1) {
                wa = var2;
@@ -4708,12 +4714,14 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
       }
 
    }
-//------ Выбор действия, если нажата кнопка в пункте меню
+//------ Вывод сообщений, если нажата кнопка в пункте меню
    static void V() {
       if(hb >= 0) {
          int[] var3 = eb[gb];   //пункты меню
          int var2 = hb * 4;     //пункт меню (1..6) умножаем на 4
-         int var1 = var3[var2 + 1]; //сообщения: 19 - нападение, 36 - закончить раунд, 38 - всплывающее сообщение
+         int var1 = var3[var2 + 1]; //сообщения: 
+         //19 - нападение,31 - рекрутировать технику, 31 - рекрутировать офицеров,
+         //36 - закончить раунд, 38 - всплывающее сообщение
          int var0 = var3[var2 + 2]; //10 - показать всплывающее меню, 81 - обычный режим, 84 - рекрутировать
          switch(var0) {
          case 10:   //закрыть всплывающее меню

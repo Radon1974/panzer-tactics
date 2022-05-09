@@ -16,8 +16,9 @@
 //FIXME: При лечении не снимается выделение хода (места куда передвигаться)
 //FIXME: Не всегда находит юнита который еще не перемещался
 //FIXME: Плохо видно какой не сходил юнит (применить цвета)
-//FIXME: Временно сделать работу всех сценариев
-//ERROR: Не работает миссия Суэцкий канал в сценарии Кампании Фашистского Блока и т.д. (не работают сценарии, которые не пройдены)
+//ERROR: Не выбирается в меню покупки техника союзников (в сценарии)
+//ERROR: В мультиплеере не работает за 2 сторону сенорное распознавание курсора
+//ERROR: Не работает миссия Суэцкий канал в кампании Кампания Фашистского Блока
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -79,8 +80,8 @@ public class C extends Canvas implements Runnable {
    static int oa = 0;
    static int[] pa = new int[2];    //[0]: координаты курсора (в гексах) по оси X
    static int[] qa = new int[2];    //[0]: координаты курсора (в гексах) по оси Y
-   static int ra = 0;
-   static int sa = 0;
+   static int ra = 0;   //сторона (игрок или компьютер)
+   static int sa = 0;   //сторона (игрок или компьютер)
    static int[][] ta = (int[][])null;	//юниты в сценарии у игрока
    static int[][] ua = (int[][])null;
    static int[][] va = (int[][])null;	//юниты в сценарии у противника
@@ -8149,9 +8150,10 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
 
          j.d = 60;
          Thread.yield();
-
+//Отбор техники по критериям для показа в меню рекрутировать
          for(var2 = 0; var2 < da.length; ++var2) {
-            if(((ra == 2?true:(ra != 6 && ra != 0?true:true)) == (da[var2][1] == 2?true:(da[var2][1] != 6 && da[var2][1] != 0?true:true)) || da[var2][1] == 9 || (zA & 15) == 3 && (sa == 2?true:(sa != 6 && sa != 0?true:true)) == (da[var2][1] == 2?true:(da[var2][1] != 6 && da[var2][1] != 0?true:true))) && cb >= da[var2][2]) {
+            if(((ra == 2?12:(ra == 6 || ra == 0?10:11)) == (da[var2][1] == 2?12:(da[var2][1] == 6 || da[var2][1] == 0?10:11)) || da[var2][1] == 9 || (zA & 15) == 3 && (sa == 2?12:(sa == 6 || sa != 0?10:11)) == (da[var2][1] == 2?12:(da[var2][1] == 6 || da[var2][1] == 0?10:11))) && cb >= da[var2][2]) {
+          //if(((ra == 2?true:(ra != 6 && ra != 0?true:true)) == (da[var2][1] == 2?true:(da[var2][1] != 6 && da[var2][1] != 0?true:true)) || da[var2][1] == 9 || (zA & 15) == 3 && (sa == 2?true:(sa != 6 && sa != 0?true:true)) == (da[var2][1] == 2?true:(da[var2][1] != 6 && da[var2][1] != 0?true:true))) && cb >= da[var2][2]) {
                var4 = -1;
                switch(ab) {
                case 0:
@@ -8163,6 +8165,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
                   break;
                case 2:
                   var4 = da[var2][9];
+                  break;
                }
 
                if(var4 != -1 && bb >= var4) {
@@ -8194,7 +8197,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
          y[3] = true;
          y[2] = true;
          y[3] = true;
-         G();
+         G();   //изображения юнитов
          j.d = 80;
          Thread.yield();
          if((zA & 15) == 3 && var1 != 5) {
@@ -8204,6 +8207,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
 
          HG.H();
          HG.L(2);
+         break;
       }
 
    }
