@@ -11,7 +11,7 @@
 //FIXME: Сместить прицел при наведении на противника во время боя
 //FIXME: При рекрутировании техники в конце списка выдает не то всплывающее окно с текстом (текст некорректно написан) - переправить текст
 //FIXME: Звездочки нанимаемого офицера сместить (офицер на юните)
-//FIXME: Самолет не атакует , когда под ним враг (если не лететь - стоять на месте)
+//FIXME: Убрать подсветку пути при пополнении численности и боеприпасов юнита
 //
 //FIXME: При лечении не снимается выделение хода (места куда передвигаться)
 //FIXME: Не всегда находит юнита который еще не перемещался
@@ -192,7 +192,9 @@ public class C extends Canvas implements Runnable {
    static int offset_x = 0;
    static int offset_y = 0;
    static boolean alpha_pos = false;
+   static boolean way = false;
    static int test = 0;
+   static boolean test_boolean = false;
 
 //------ Режим работы программы
    public static void A(int var0) {
@@ -781,6 +783,7 @@ if(c) {
 }  
 //Выбор гекса указания курсора
 if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2) {
+ way = false;   
  if(var_y >= 18 && var_y <= g - 34) {  //не реагировать на верхнюю и нижнюю информационную полоску 
   for( int var_i = 0; var_i <= (f - 25) / 45 + 1; ++var_i) {    //перебор гексов по x
      for( int var_j = 0; var_j <= g / 50 + 1; ++var_j) {    //перебор гексов по y
@@ -813,6 +816,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
   pa[db] = min_x;
   qa[db] = min_y;
   buld = true; //показывать названия юнитов при клике мышки
+
   if(dA != null && dA[7] == 0) {
      buld = true;
   }
@@ -822,16 +826,17 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
      } else {
         k = 0L;
      }   
-  if(o != 12 && o != 1 && j == null && var_y >= g - 34) { //нажат правый софт (выход в предыдущее меню) нижняя полоска в игре
+  if(o != 12 && o != 1 && j == null && var_y >= g - 34) { //нажат 0 (стратегическая карта) нижняя полоска в игре
         u[5] = 20;
         v[5] = 0;
+        test_boolean = false;
      } else {
         k = 0L;
   }
   if(o != 12 && o != 1 && j == null && min_x == var_x2 && min_y == var_y2 && var_y >= 18 && var_y <= g - 34) { //нажата центральная кнопка
     u[4] = 20;
     v[4] = 0;
-    
+    way = true;
   } else {
     k = 0L;
   }  
@@ -1134,7 +1139,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
          byte[] var6 = r[var7];
          byte var0 = var6[0];
          int var5 = B(var0);
-         test = var5;
+         
          int var4 = var6.length;
          boolean var3 = false;
          boolean var2 = false;
@@ -7543,7 +7548,8 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
                case 18:
                   var3 = false;
                   
-                  if(C(5)) {
+                  if(C(5)) {    //нажата клавиша огонь //if(C(5)) {
+                      
                      byte var2 = 0;
                      if(o == 17) {
                         var2 = 6;
@@ -7733,7 +7739,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
                            }
                         }
                      }
-
+                     
                      if(var2 >= 0) {
                         fA = A(pa[db], qa[db], 1, 3);
                         if(fA != null && fA[23] == 0) {
@@ -7880,7 +7886,8 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
                            fA = null;
                         }
 
-                        if(dA != null && dA[7] == 0) {
+                        if(dA != null && dA[7] == 0 && hB != 3) {
+                            
                            A(dA, pa[db], qa[db]);  //построение пути перемещения: юнит, координата X, координата Y
                             
                         }

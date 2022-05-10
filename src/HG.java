@@ -2966,7 +2966,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
 //------ Обработка пунктов меню
    static void T(int var0) {
       int var1;
-      test = var0;  //для отладки
+      
       switch(var0) {
       case 1:
          C.ab = sa[ua][(va << 2) + 3];
@@ -3986,8 +3986,9 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
       case 5:
          var3[0] = var0 - 90;   //var3[0] = var0 - 50;
          var3[1] = var1 + 50;   //var3[1] = var1 + 32;
+         break;
       }
-
+      
       return var3;
    }
 
@@ -4754,6 +4755,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
    }
 //------ Вывод сообщения всплывающего меню
    static void EA(int var0) {
+      test =  var0;
       vA = (C.pa[C.db] - C.la + 1) * 45 + -23 + C.offset_x;
       //vA = (C.pa[C.db] - C.la + 1) * 25 + -23;
       wA = (C.qa[C.db] - (C.pa[C.db] + 1 & 1) - C.ma) * 50 + ((C.pa[C.db] + 1 & 1) == 1?25:0) + -16 + C.offset_y;
@@ -5033,7 +5035,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
                int[] var14 = B(vA, wA, var7);
                var11 = var1 == 18;
                A(var0, var14[0], var14[1], var3, var11); //вывод гексового меню на экран
-               
+               break;
             }
          }
 
@@ -5054,7 +5056,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
 
    }
 //------ Всплывающее меню
-   static void GA(int var0) {
+   static void  GA(int var0) {
       FA(gb);
       gb = var0;
       EA(var0);
