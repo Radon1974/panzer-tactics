@@ -123,6 +123,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
    static boolean popup_menu = false;   //триггер всплывающего меню
    static int[] sens_menu = new int[50];
    static int test = 0;
+   static int test2 = 0;
 
    public static InputStream A(String var0) throws NullPointerException {
       DataInputStream var1 = null;
@@ -4133,7 +4134,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
       case 13:
          ib.removeAllElements();
          A(true);
-         C.dA = null;
+         C.dA = null; //стереть выбранный юнит
          C.A(C.db ^ 1, (int[])null);
          C.A(C.db == 0?C.vA:C.wA, C.db == 0?C.xA:C.yA, C.db == 0?C.ta:C.va, (int[])null);
          break;
@@ -4164,6 +4165,8 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
          }
 
          C.dA = null;
+         C.A(C.db ^ 1, (int[])null);
+         C.A(C.db == 0?C.vA:C.wA, C.db == 0?C.xA:C.yA, C.db == 0?C.ta:C.va, (int[])null);
          break;
       case 16:
          ib.removeAllElements();
@@ -4176,6 +4179,8 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
          }
 
          C.dA = null;
+         C.A(C.db ^ 1, (int[])null);
+         C.A(C.db == 0?C.vA:C.wA, C.db == 0?C.xA:C.yA, C.db == 0?C.ta:C.va, (int[])null);         
          break;
       case 17:
          ib.removeAllElements();
@@ -4572,6 +4577,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
 
             C.gb[var0] = false;
          }
+         
       case 38:
       case 39:
          var1 = sa[ua][(va << 2) + 3];
@@ -4721,9 +4727,11 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
          int[] var3 = eb[gb];   //пункты меню
          int var2 = hb * 4;     //пункт меню (1..6) умножаем на 4
          int var1 = var3[var2 + 1]; //сообщения: 
-         //19 - нападение,31 - рекрутировать технику, 31 - рекрутировать офицеров,
+         //13 - отмена, 15 - пополнить боекомплект, 16 - лечение, 19 - атака, 31 - рекрутировать технику, 31 - рекрутировать офицеров,
          //36 - закончить раунд, 38 - всплывающее сообщение
          int var0 = var3[var2 + 2]; //10 - показать всплывающее меню, 81 - обычный режим, 84 - рекрутировать
+         test = var1;
+         test2 = var0;
          switch(var0) {
          case 10:   //закрыть всплывающее меню
             BA(var1);
@@ -4755,7 +4763,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
    }
 //------ Вывод сообщения всплывающего меню
    static void EA(int var0) {
-      test =  var0;
+      
       vA = (C.pa[C.db] - C.la + 1) * 45 + -23 + C.offset_x;
       //vA = (C.pa[C.db] - C.la + 1) * 25 + -23;
       wA = (C.qa[C.db] - (C.pa[C.db] + 1 & 1) - C.ma) * 50 + ((C.pa[C.db] + 1 & 1) == 1?25:0) + -16 + C.offset_y;
