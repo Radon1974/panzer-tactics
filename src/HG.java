@@ -4136,7 +4136,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
          A(true);
          C.dA = null; //стереть выбранный юнит
          C.A(C.db ^ 1, (int[])null);
-         C.A(C.db == 0?C.vA:C.wA, C.db == 0?C.xA:C.yA, C.db == 0?C.ta:C.va, (int[])null);
+         C.A(C.db == 0?C.vA:C.wA, C.db == 0?C.xA:C.yA, C.db == 0?C.ta:C.va, (int[])null);    //определение видимой территории
          break;
       case 14:
          ib.removeAllElements();
@@ -4152,7 +4152,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
 
          C.dA = null;
          C.A(C.db ^ 1, (int[])null);
-         C.A(C.db == 0?C.vA:C.wA, C.db == 0?C.xA:C.yA, C.db == 0?C.ta:C.va, (int[])null);
+         C.A(C.db == 0?C.vA:C.wA, C.db == 0?C.xA:C.yA, C.db == 0?C.ta:C.va, (int[])null);    //определение видимой территории
          break;
       case 15:
          ib.removeAllElements();
@@ -4166,7 +4166,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
 
          C.dA = null;
          C.A(C.db ^ 1, (int[])null);
-         C.A(C.db == 0?C.vA:C.wA, C.db == 0?C.xA:C.yA, C.db == 0?C.ta:C.va, (int[])null);
+         C.A(C.db == 0?C.vA:C.wA, C.db == 0?C.xA:C.yA, C.db == 0?C.ta:C.va, (int[])null);    //определение видимой территории
          break;
       case 16:
          ib.removeAllElements();
@@ -4180,7 +4180,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
 
          C.dA = null;
          C.A(C.db ^ 1, (int[])null);
-         C.A(C.db == 0?C.vA:C.wA, C.db == 0?C.xA:C.yA, C.db == 0?C.ta:C.va, (int[])null);         
+         C.A(C.db == 0?C.vA:C.wA, C.db == 0?C.xA:C.yA, C.db == 0?C.ta:C.va, (int[])null);       //определение видимой территории      
          break;
       case 17:
          ib.removeAllElements();
@@ -4201,7 +4201,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
 
          C.gA = false;
          C.dA = null;
-         C.A(C.db == 0?C.vA:C.wA, C.db == 0?C.xA:C.yA, C.db == 0?C.ta:C.va, (int[])null);
+         C.A(C.db == 0?C.vA:C.wA, C.db == 0?C.xA:C.yA, C.db == 0?C.ta:C.va, (int[])null);    //определение видимой территории
          C.A(C.db ^ 1, (int[])null);
          break;
       case 18:
@@ -4226,7 +4226,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
          C.dA = null;
          C.gA = false;
          C.A(C.db ^ 1, (int[])null);
-         C.A(C.db == 0?C.vA:C.wA, C.db == 0?C.xA:C.yA, C.db == 0?C.ta:C.va, (int[])null);
+         C.A(C.db == 0?C.vA:C.wA, C.db == 0?C.xA:C.yA, C.db == 0?C.ta:C.va, (int[])null);    //определение видимой территории
          A(false);
          break;
       case 19:
@@ -4265,7 +4265,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
          }
 
          C.dA = null;
-         C.A(C.db == 0?C.vA:C.wA, C.db == 0?C.xA:C.yA, C.db == 0?C.ta:C.va, (int[])null);
+         C.A(C.db == 0?C.vA:C.wA, C.db == 0?C.xA:C.yA, C.db == 0?C.ta:C.va, (int[])null);    //определение видимой территории
          break;
       case 20:
          var0 = eb[14][3];
@@ -4306,7 +4306,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
          break;
       case 22:
          ib.removeAllElements();
-         C.A(C.db == 0?C.vA:C.wA, C.db == 0?C.xA:C.yA, C.db == 0?C.ta:C.va, C.dA);
+         C.A(C.db == 0?C.vA:C.wA, C.db == 0?C.xA:C.yA, C.db == 0?C.ta:C.va, C.dA);    //определение видимой территории
          A(true);
          if(C.wb >= 0 && C.fA != null) {
             C.fA[13] = C.wb;
@@ -4319,7 +4319,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
          break;
       case 23:
          ib.removeAllElements();
-         C.A(C.db == 0?C.vA:C.wA, C.db == 0?C.xA:C.yA, C.db == 0?C.ta:C.va, C.dA);
+         C.A(C.db == 0?C.vA:C.wA, C.db == 0?C.xA:C.yA, C.db == 0?C.ta:C.va, C.dA);    //определение видимой территории
          A(true);
          C.A(18);
          break;
@@ -4336,7 +4336,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
          ib.removeAllElements();
          C.gA = false;
          C.A(C.db ^ 1, (int[])null);
-         C.A(C.db == 0?C.vA:C.wA, C.db == 0?C.xA:C.yA, C.db == 0?C.ta:C.va, C.dA);
+         C.A(C.db == 0?C.vA:C.wA, C.db == 0?C.xA:C.yA, C.db == 0?C.ta:C.va, C.dA);    //определение видимой территории
          A(true);
          break;
       case 25:
@@ -4437,7 +4437,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
          ib.removeAllElements();
          C.gA = false;
          C.A(C.db ^ 1, C.dA);
-         C.A(C.db == 0?C.vA:C.wA, C.db == 0?C.xA:C.yA, C.db == 0?C.ta:C.va, C.dA);
+         C.A(C.db == 0?C.vA:C.wA, C.db == 0?C.xA:C.yA, C.db == 0?C.ta:C.va, C.dA);    //определение видимой территории
          A(true);
          break;
       case 30:
@@ -4453,7 +4453,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
          ib.removeAllElements();
          C.gA = false;
          C.A(C.db ^ 1, (int[])null);
-         C.A(C.db == 0?C.vA:C.wA, C.db == 0?C.xA:C.yA, C.db == 0?C.ta:C.va, C.dA);
+         C.A(C.db == 0?C.vA:C.wA, C.db == 0?C.xA:C.yA, C.db == 0?C.ta:C.va, C.dA);    //определение видимой территории
          A(true);
          break;
       case 31:
@@ -4485,7 +4485,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
 
          C.dA = null;
          C.A(C.db ^ 1, (int[])null);
-         C.A(C.db == 0?C.vA:C.wA, C.db == 0?C.xA:C.yA, C.db == 0?C.ta:C.va, (int[])null);
+         C.A(C.db == 0?C.vA:C.wA, C.db == 0?C.xA:C.yA, C.db == 0?C.ta:C.va, (int[])null);    //определение видимой территории
          break;
       case 32:
          ib.removeAllElements();
@@ -4510,7 +4510,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
 
          C.dA = null;
          C.A(C.db ^ 1, (int[])null);
-         C.A(C.db == 0?C.vA:C.wA, C.db == 0?C.xA:C.yA, C.db == 0?C.ta:C.va, (int[])null);
+         C.A(C.db == 0?C.vA:C.wA, C.db == 0?C.xA:C.yA, C.db == 0?C.ta:C.va, (int[])null);    //определение видимой территории
          break;
       case 33:
          ib.removeAllElements();
@@ -4538,13 +4538,13 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
 
          C.dA = null;
          C.A(C.db ^ 1, (int[])null);
-         C.A(C.db == 0?C.vA:C.wA, C.db == 0?C.xA:C.yA, C.db == 0?C.ta:C.va, (int[])null);
+         C.A(C.db == 0?C.vA:C.wA, C.db == 0?C.xA:C.yA, C.db == 0?C.ta:C.va, (int[])null);    //определение видимой территории
          break;
       case 34:
          ib.removeAllElements();
          A(true);
          C.dA = null;
-         C.A(C.db == 0?C.vA:C.wA, C.db == 0?C.xA:C.yA, C.db == 0?C.ta:C.va, (int[])null);
+         C.A(C.db == 0?C.vA:C.wA, C.db == 0?C.xA:C.yA, C.db == 0?C.ta:C.va, (int[])null);    //определение видимой территории
          C.A(18);
          break;
       case 35:
@@ -4730,8 +4730,8 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
          //13 - отмена, 15 - пополнить боекомплект, 16 - лечение, 19 - атака, 31 - рекрутировать технику, 31 - рекрутировать офицеров,
          //36 - закончить раунд, 38 - всплывающее сообщение
          int var0 = var3[var2 + 2]; //10 - показать всплывающее меню, 81 - обычный режим, 84 - рекрутировать
-         test = var1;
-         test2 = var0;
+         //test = var1;
+         //test2 = var0;
          switch(var0) {
          case 10:   //закрыть всплывающее меню
             BA(var1);
