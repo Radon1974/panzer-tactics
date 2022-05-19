@@ -4033,7 +4033,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
          C.A(11);
          ta = true;
          break;
-      case 2:
+      case 2:   //засада
          if(gb != 0 && gb != 9 && gb != 6) {
             A(false);
          } else {
@@ -4229,7 +4229,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
          C.A(C.db == 0?C.vA:C.wA, C.db == 0?C.xA:C.yA, C.db == 0?C.ta:C.va, (int[])null);    //определение видимой территории
          A(false);
          break;
-      case 19:
+      case 19:  //засада???
          if(gb != 18 && gb != 22) {
             ib.removeAllElements();
             A(true);
@@ -4237,8 +4237,8 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
 
          if(C.dA != null && C.fA != null) {
             if(C.dA[16] > 0) {
-               var0 = C.B(C.fA[1], C.fA[2], C.dA[1], C.dA[2]);
-               C.A(C.fA, C.dA, var0);
+               var0 = C.B(C.fA[1], C.fA[2], C.dA[1], C.dA[2]);  //сравнение координат двух юнитов
+               C.A(C.fA, C.dA, var0);   //расчет боя  двух юнитов
                C.A(C.fA, C.dA);
                C.C(C.fA, C.dA);
             } else {
@@ -4727,13 +4727,13 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
          int[] var3 = eb[gb];   //пункты меню
          int var2 = hb * 4;     //пункт меню (1..6) умножаем на 4
          int var1 = var3[var2 + 1]; //сообщения: 
-         //13 - отмена, 15 - пополнить боекомплект, 16 - лечение, 19 - атака, 31 - рекрутировать технику, 31 - рекрутировать офицеров,
-         //36 - закончить раунд, 38 - всплывающее сообщение
+         //2 - засада, 13 - отмена, 15 - пополнить боекомплект, 16 - лечение, 19 - атака, 
+         //20 - рекрутировать технику, 31 - рекрутировать офицеров, 34 - ход игрока, 36 - закончить раунд, 38 - всплывающее сообщение, 39 - внимание
          int var0 = var3[var2 + 2]; //10 - показать всплывающее меню, 81 - обычный режим, 84 - рекрутировать
-         //test = var1;
-         //test2 = var0;
+         test = var1;
+         test2 = var0;
          switch(var0) {
-         case 10:   //закрыть всплывающее меню
+         case 10:   //всплывающее меню
             BA(var1);
             break;
          case 18:
@@ -4902,7 +4902,7 @@ public class HG extends MIDlet implements CommandListener, PlayerListener {
    static void FA(int var0) {
       switch(var0) {
       case 18:
-         BA(19);
+         BA(19);    //засада???
          break;
       case 19:
       case 20:

@@ -19,6 +19,7 @@
 //FIXME: Не подсвечивается красным противник в режиме хода (показ подсвеченных гексов возможного хода на карте)
 //FIXME: Когда противник рядом с юнитом не подсвечивается желтым пути движения
 //FIXME: Реализовать перехват во время движения, когда враг не виден (при движении мимо врага)
+//FIXME: При попадении во время дождя самолета в засаду происходит бой (не должнен быть бой во время дождя у самолетов)
 
 //ERROR: Не работает миссия Суэцкий канал в кампании Кампания Фашистского Блока
 
@@ -112,8 +113,8 @@ public class C extends Canvas implements Runnable {
    static int sA = 0;
    static boolean tA = true;
    static int[] uA = new int[2];
-   static int[][] vA;   //местность горы
-   static int[][] wA;   //города для захвата
+   static int[][] vA;   //города свои
+   static int[][] wA;   //города вражеские
    static int[][] xA;   //аэродромы свои
    static int[][] yA;   //аэродромы вражеские
    static int zA = 0;
@@ -142,6 +143,7 @@ public class C extends Canvas implements Runnable {
    static int[][] vb2;   //массив пути (дополнительно) гексы: 0 - черный, 1 - серый, 2 - прозрачный, 3 - красный, 4 - желтым (vb = 1), 5 - желтым (vb = 2)
    static int[][] vb3;   //массив вражеских юнитов сухопутная техника
    static int[][] vb4;   //массив вражеских юнитов воздушная техника
+   static int[][] vb5;   //доступность хода
    static int wb = -1;
    static int[] xb;
    static int[][] yb;
@@ -474,7 +476,7 @@ public class C extends Canvas implements Runnable {
                HG.GA(23);
                HG.fb = true;
             } else {
-               var3 = H(dA);
+               var3 = H(dA);    //0 - есть столкновение с врагом (засада), (-1) - враг рядом, 1 - ???
                if(var3 == 1) {
                   if(dA != null) {
                      int[] var4 = A(dA[1], dA[2], 1, db == 0?2:1);
@@ -490,7 +492,7 @@ public class C extends Canvas implements Runnable {
 
                   A(db == 0?vA:wA, db == 0?xA:yA, db == 0?ta:va, (int[])null);    //определение видимой территории
                   M(dA);
-               } else if(var3 == -1 && dA != null) {
+               } else if(var3 == -1 && dA != null) {    //var3 = -1 - враг рядом
                   if(dA[16] > 0) {
                      dA[7] = 1;
                      A(db == 0?vA:wA, db == 0?xA:yA, db == 0?ta:va, (int[])null);    //определение видимой территории
@@ -834,7 +836,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
   if(o != 12 && o != 1 && j == null && var_y >= g - 34) { //нажат 0 (стратегическая карта) нижняя полоска в игре
         u[5] = 20;
         v[5] = 0;
-        test_boolean = false;
+
      } else {
         k = 0L;
   }
@@ -1419,11 +1421,11 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
 
                if(var3 != 0) {  //если незапрещено движение
                   if(rA[0][var5][var7] != -1) {
-                     A(var0, sA, rA[0][var5][var7], var8 + offset_x, var6 + offset_y);
+                     A(var0, sA, rA[0][var5][var7], var8 + offset_x, var6 + offset_y);  //вывод местности
                   }
 
                   if(rA[1][var5][var7] != -1) {
-                     A(var0, 3, rA[1][var5][var7], var8 + offset_x, var6 + offset_y);
+                     A(var0, 3, rA[1][var5][var7], var8 + offset_x, var6 + offset_y);   //вывод рек и дорог
                   }
                   
                   if(var3 == 1 && var9 != 4 && var9 != 5) {
@@ -1467,12 +1469,13 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
       }
     
    }
-//------Построение видимой территории юнитами, городами и аэропортами
+//------ Построение видимой территории юнитами, городами и аэропортами
    static void A(int[][] var0, int[][] var1, int[][] var2, int[] var3) {
       vb = new int[pA][oA];
       vb2 = new int[pA][oA];
       vb3 = new int[pA][oA];
       vb4 = new int[pA][oA];
+      vb5 = new int[pA][oA];
       int var4;
       int var5;
       int var6;
@@ -1483,7 +1486,8 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
       alpha_pos = false;
       enemy_pos = false;
       if (var3 != null)  {
-        alpha_pos = true; 
+        alpha_pos = true;
+        test_boolean = false;    //отладка
       }
       for(var11 = 0; var11 < var0.length; ++var11) {
          yb = new int[pA][oA];
@@ -1495,10 +1499,10 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
          F(var1[var11][1], var1[var11][2]);   //видимая территория вокруг своих аэродромов
       }
       
-     
+     //Вражеские юниты
       var12 = db == 0?va:ta;
         for(var8 = 0; var8 < var12.length; ++var8) {
-         if(var3 != var12[var8]) {
+         //if(var3 != var12[var8]) {
             var7 = var12[var8][1];  //координата X
             var6 = var12[var8][2];  //координата Y
             var5 = da[var12[var8][0]][5];
@@ -1508,10 +1512,10 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
             } else {
                 A(var7, var6, 1, 4, var5); //территория вокруг скрытых вражеских юнитов    
             }
-         }
+         //}
       }
        
-      
+      //Все юниты, кроме выбранного
       for(var8 = 0; var8 < var2.length; ++var8) {
          if(var3 != var2[var8]) {
             var7 = var2[var8][1];
@@ -1534,7 +1538,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
             A(var7, var6, var4, 2, var5); //видимая территория вокруг своих юнитов
          }
       }
-      
+      //Выбранный юнит
       if(var3 != null) {
          var8 = var3[1];
          var7 = var3[2];
@@ -1555,9 +1559,26 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
          }
          yb = new int[pA][oA];
          A(var8, var7, var4, 2, var6);  //видимая территория на ближайших гексах около юнита (радиус 1 - 4 клетки)
-
+         vb3[var7][var8] = 0;
+         vb4[var7][var8] = 0;
          yb = new int[pA][oA]; 
          A(var8, var7, var5, 1, var6);  //серая территория на черных гексах в пределах хода юнита
+//         vb5 = vb;
+         //Проверка серых гексов на доступность хода - тестирование
+//            for(int var10 = 2; var10 < pA - 2; ++var10) {
+//               for(int var9 = 2; var9 < oA - 2; ++var9) { 
+//                   A(var3, var9, var10);  //построение пути перемещения: юнит, координата X, координата Y
+//                   vb5[var10][var9] = hB;
+//                    if(vb[var10][var9] == 1) {
+//                        
+//                        if(hB == 1) {
+//                            vb[var10][var9] = 1;   
+//                        } else if(hB == 2) {
+//                            vb[var10][var9] = 0;    
+//                        }
+//                    }
+//                }
+//            }
          
       }
 
@@ -1660,7 +1681,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
 
       return 1;
    }
-
+//------ Проверка на совпадение координат юнитов с городами
    static int A(int[] var0) {
       if(da[var0[0]][5] != 5) {
          int[][] var2 = db == 0?wA:vA;
@@ -1676,7 +1697,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
 
       return -1;
    }
-
+//------ Проверка на совпадение координат юнитов с городами
    static String B(int var0, int var1) {
       int var2;
       for(var2 = 0; var2 < vA.length; ++var2) {
@@ -1693,7 +1714,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
 
       return null;
    }
-
+//------ Проверка на совпадение координат юнитов с аэродромами
    static String C(int var0, int var1) {
       int var2;
       for(var2 = 0; var2 < xA.length; ++var2) {
@@ -1710,7 +1731,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
 
       return null;
    }
-
+//------ Проверка на совпадение координат юнитов с аэродромами
    static int A(int var0, int var1, int var2) {
       int[][] var6 = var1 == 0?xA:yA;
       int[][] var5 = var1 == 0?yA:xA;
@@ -1755,7 +1776,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
 
       return 1;
    }
-
+//------ Проверка на совпадение координат сухопутных юнитов с вражескими аэродромами (возврат номер аэродрома)
    static int B(int[] var0) {
       if(da[var0[0]][5] != 5) {
          int[][] var2 = db == 0?yA:xA;
@@ -1771,7 +1792,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
 
       return -1;
    }
-
+//------ Проверка на совпадение координат юнитов с аэродромами
    static boolean D(int var0, int var1) {
       int[][] var6 = db == 0?xA:yA;
 
@@ -2577,7 +2598,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
                da[var0][20] = var3.readByte();
                da[var0][21] = var3.readByte();
                da[var0][22] = var3.readByte();
-               da[var0][23] = var3.readByte();
+               da[var0][23] = var3.readByte();    //виден или невиден на карте юнит
                da[var0][24] = var3.readShort();   //0
                da[var0][25] = var3.readShort();
                da[var0][26] = var3.readShort();   //0
@@ -2802,7 +2823,9 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
        //var3 = var5 * 32 + ((var1[1] & 1) == 1?16:0) + -16;
          if(var1[18] == 0) {
             var2 = da[var1[0]][0];
+            
             if(var1[15] > 0 && o != 20) {
+                
                A(var0, 6, 3, var6 * 45 + -23 + offset_x, var5 * 50 + ((var1[1] & 1) == 1?25:0) + -16 + offset_y); //вывод красной картинки на враге при атаке
              //A(var0, 6, 3, var6 * 25 + -23, var5 * 32 + ((var1[1] & 1) == 1?16:0) + -16);
             }
@@ -2897,7 +2920,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
                      return var6[var4];
                   }
 
-                  if((var2 & 2) == 2 && var6[var4][18] == 1) {  //выбор воздушного юнита (если на клетке 2 юнита)
+                  if((var2 & 2) == 2 && var6[var4][18] == 1) {  //выбор воздушного юнита (если на клетке 2 юнита)???
                      return var6[var4];
                   }
                }
@@ -2907,14 +2930,14 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
 
       return null;
    }
-
-   static boolean A(int var0, int[] var1) {
+//------ Определение есть ли в радиусе 1 гекса враг
+   static boolean A(int var0, int[] var1) { //свой или чужой, сравниваемый юнит
       boolean var3 = false;
       int[][] var2 = var0 == 0?ta:va;
       int var4;
       int var5;
       int var6;
-      if(var1 == null) {
+      if(var1 == null) { //сравниваемый юнит
          for(var6 = 0; var6 < var2.length; ++var6) {
             var5 = var2[var6][1];
             var4 = var2[var6][2];
@@ -2926,23 +2949,23 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
             }
 
             var2[var6][15] = 0;
-            if(vb[var4][var5] == 2) {
-               var2[var6][23] = 1;
+            if(vb[var4][var5] == 2) {   //определение видимых юнитов
+               var2[var6][23] = 1;      //юнит виден
             } else {
-               var2[var6][23] = 0;
+               var2[var6][23] = 0;      //юнит скрыт
             }
          }
       } else {
-         int var9 = var1[1];
-         int var8 = var1[2];
+         int var9 = var1[1];    //координата X сравниваемого юнита
+         int var8 = var1[2];    //координата Y сравниваемого юнита
          if(lA[0] == 2 && da[var1[0]][5] == 5) {
             return false;
          }
 
          for(int var7 = 0; var7 < var2.length; ++var7) {
             var2[var7][15] = 0;
-            var6 = var2[var7][1];
-            var5 = var2[var7][2];
+            var6 = var2[var7][1];    //координата X юнита (не сравниваемого юнита)
+            var5 = var2[var7][2];    //координата Y юнита (не сравниваемого юнита)
             if(lA[0] != 2 || da[var1[0]][4] != 7 || da[var2[var7][0]][5] != 5) {
                var4 = 0;
                if(var1[25] != -1) {
@@ -2950,16 +2973,16 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
                }
 
                if(da[var1[0]][5] != 5) {
-                  if(rA[2][var1[2]][var1[1]] == 3) {
+                  if(rA[2][var1[2]][var1[1]] == 3) {    //влияние погоды
                      --var4;
                   } else if(rA[2][var1[2]][var1[1]] == 4) {
                      ++var4;
                   }
                }
 
-               var0 = B(var9, var8, var6, var5);
-               if(vb[var5][var6] != 2 && var0 > da[var1[0]][19] + var4) {
-                  var2[var7][23] = 0;
+               var0 = B(var9, var8, var6, var5);    //определение расстояния до врага
+               if(vb[var5][var6] != 2 && var0 > da[var1[0]][19] + var4) {   //юнит невиден и в не видимости сравниваемого юнита
+                  var2[var7][23] = 0;      //юнит скрыт
                } else if((da[var2[var7][0]][6] != 2 || da[var1[0]][14] != 0) && (da[var2[var7][0]][6] != 3 || da[var1[0]][15] != 0) && (da[var2[var7][0]][6] != 1 || da[var1[0]][12] != 0) && (da[var2[var7][0]][6] != 0 || da[var1[0]][13] != 0) && (da[var1[0]][5] != 5 || da[var2[var7][0]][5] == 5 || var0 <= 0) && (da[var1[0]][5] == 5 || da[var2[var7][0]][5] != 5 || var0 <= 0) && var0 >= da[var1[0]][20]) {
                   var4 = da[var1[0]][21];
                   if(var1[25] != -1) {
@@ -2967,10 +2990,10 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
                   }
 
                   if(var0 <= var4) {
-                     var2[var7][23] = 1;
+                     var2[var7][23] = 1;      //юнит виден
                      A(var1, var2[var7], var0);
                      if(var2[var7][18] == 1) {
-                        int[] var10 = A(var2[var7][1], var2[var7][2], 1, 3);
+                        int[] var10 = A(var2[var7][1], var2[var7][2], 1, 3);    //расчет атаки???
                         if(var10 != null) {
                            var10[18] = 1;
                            var2[var7][18] = 0;
@@ -2980,16 +3003,16 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
                         }
                      }
 
-                     var3 = true;
+                     var3 = true;  //true - есть поблизости юнит для атаки
                   }
                }
             }
          }
       }
 
-      return var3;
+      return var3;  //false - нет поблизости юнита для атаки
    }
-
+//------ Определение расстояния до врага
    static int B(int var0, int var1, int var2, int var3) {
       int var5 = var0 - var2 < 0?0 - (var0 - var2):var0 - var2;
       int var4 = var5 / 2;
@@ -3008,7 +3031,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
          var0 = var3 - var1;
       }
 
-      return var5 + var0;
+      return var5 + var0;   //возврат расстояния
    }
 
    static int C(int[] var0) {
@@ -3107,8 +3130,8 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
 
       return var4;
    }
-
-   static void A(int[] var0, int[] var1, int var2) {
+//------ Расчет атаки двух юнитов???
+   static void A(int[] var0, int[] var1, int var2) {    //свой, чужой, расстояние между юнитами
       int var8 = var0[25];
       int var7 = var1[25];
       int var6 = 0;
@@ -4227,7 +4250,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
    static void A(int var0, int var1, int var2, int var3, int var4) {    //коорд. юнита X, Y, зрение юнита или ход, цвет видимости (0 - черный, 1- серый, 2 - невидим., 3 - красный), тип юнита
       if(var2 >= 0) {
          if (var3 != 4 && var3 != 5) {
-         vb[var1][var0] = var3;
+            vb[var1][var0] = var3;
          }
          if (var3 == 2 && alpha_pos == true) {
             vb2[var1][var0] = 4;    
@@ -4258,11 +4281,13 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
             int var6 = var1 + nB[var0 & 1][var8 + 1];   //координата Y
             if(var7 > 0 && var7 < oA - 1 && var6 > 0 && var6 < pA - 1 && var2 > yb[var6][var7]) {   //проверка выхода за пределы карты или видимости,хода  юнита
                 int var5;    
-                if (vb3[var1][var0] == 5 && var4 != 5 || vb4[var1][var0] == 5 && var4 == 5) {        //территория вокруг вражеского юнита видимого
+                if (vb3[var1][var0] == 5 && var4 != 5 && alpha_pos == true || vb4[var1][var0] == 5 && var4 == 5 && alpha_pos == true) {        //территория вокруг вражеского юнита видимого
                     var5 = var3 == 1?var2 - 16:var2 - 1;        //если серый произвести расчет (коорд. X, Y, очки хода), иначе уменьшение цвета видимости
-                } else if (vb3[var1][var0] == 4 && var4 != 5 || vb4[var1][var0] == 4 && var4 == 5) { //территория вокруг вражеского юнита скрытого
-                    var5 = var3 == 1?var2 - z[rA[2][var6][var7]][var4]:var2 - 1;        //если серый произвести расчет (коорд. X, Y, очки хода), иначе уменьшение цвета видимости
-                } else {
+//                    vb[var1][var0] = var3;
+                } 
+//else if (vb3[var6][var7] == 4 && var4 != 5 || vb4[var6][var7] == 4 && var4 == 5) { //территория вокруг вражеского юнита скрытого
+//                    var5 = var3 == 1?var2 - z[rA[2][var6][var7]][var4]:var2 - 1;        //если серый произвести расчет (коорд. X, Y, очки хода), иначе уменьшение цвета видимости
+                else {
                     var5 = var3 == 1?var2 - z[rA[2][var6][var7]][var4]:var2 - 1; //если серый произвести расчет (коорд. X, Y, очки хода), иначе уменьшение цвета видимости
                 }
 
@@ -4291,7 +4316,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
       }
 
    }
-   
+//------ Засада???   
    static int B(int[] var0, int[] var1) {
       if(H(var0, var1) < 0) {
          return -1;
@@ -4320,7 +4345,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
          }
       }
    }
-
+//------ Засада???
    static int C(int[] var0, int[] var1) {
       if(B(var0, var1) < 0) {
          return -1;
@@ -4407,7 +4432,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
          return 1;
       }
    }
-
+//------ Передвижение юнита по местности
    static int H(int[] var0) {
       if(gA && var0 != null) {
          if(var0[18] == 1) {
@@ -4427,50 +4452,83 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
 
             if(dA[16] > 0) {
                A(db ^ 1, (int[])null);
-               return -1;
+               return -1;  //враг рядом
             }
 
             if(A(db ^ 1, dA)) {
                if(o == 22) {
-                  return -1;
+                  return -1;  //враг рядом
                }
 
                M(dA);
-               hB = 3;
+               hB = 3;  //запрещено с места двигаться (враг рядом)
             } else if(P()) {
                fA = A(pa[db], qa[db], 1, 3);
-               return 1;
+               return 1;    //???
             }
 
             fA = A(pa[db], qa[db], 1, 3);
-            return -1;
+            return -1;  //враг рядом
          }
 
+        
          int[] var3 = null;
          if(var0[3] == 0 && var0[4] == 0) {
             int var1 = db == 0?2:1;
             var3 = A(var5, var4, 3, var1);
+            
+//qa[db] = var4;
+//pa[db] = var5;            
+            
+
+            int[][] var10 = var1 == 1?ta:va;
+            int var6;
+            int var7;
+            int var13;
+            int var12 = 0;
+            if(min_y != var4 && min_x != var5) {  //если конечная точка, то не будет засады
+                if(vb4[var4][var5] == 4 && da[var0[0]][5] == 5 || vb3[var4][var5] == 4 && da[var0[0]][5] != 5) {
+                    for(int var11 = 0; var11 < var10.length; ++var11) {
+                        var6 = var10[var11][1];    //координата X юнита (не сравниваемого юнита)
+                        var7 = var10[var11][2];    //координата Y юнита (не сравниваемого юнита)
+                        var13 = var10[var11][0];    //номер юнита
+                        var12 = B(var5, var4, var6, var7);    //определение расстояния до врага
+                        if(var12 == 1 && (da[var13][5] == 5 && da[var0[0]][5] == 5 || da[var13][5] != 5 && da[var0[0]][5] != 5)) {   //засада
+                            var3 = A(var6, var7, 3, var1);
+                            var0[1] = var5; //присвоить координату X сравниваемому юниту
+                            var0[2] = var4; //присвоить координату Y сравниваемому юниту
+                           test_boolean = true;    //отладка
+                        }
+                    }
+                }
+            }
+            
+            
+            
             if(var3 != null && (da[var0[0]][5] == 5 && da[var3[0]][5] != 5 || da[var0[0]][5] != 5 && da[var3[0]][5] == 5)) {
-               var3 = null;
+               var3 = null; //нет столкновения с врагом
             }
 
             if(var3 != null && var3[23] == 0 && var0[17] > 1) {
                if((da[var0[0]][6] != 2 || da[var3[0]][14] != 0) && (da[var0[0]][6] != 3 || da[var3[0]][15] != 0) && (da[var0[0]][6] != 1 || da[var3[0]][12] != 0) && (da[var0[0]][6] != 0 || da[var3[0]][13] != 0) && var3[12] > 0 && H(var3, var0) > 0) {
                   var0[16] = 1;
                }
-
-               int var2 = gB[var0[17] - 2];
-               var1 = gB[var0[17] - 1];
-               if(da[var3[0]][5] == 5 && da[var0[0]][5] != 5 || da[var3[0]][5] != 5 && da[var0[0]][5] == 5) {
+               
+    if(vb4[var4][var5] != 4 && da[var0[0]][5] == 5 || vb3[var4][var5] != 4 && da[var0[0]][5] != 5 || min_y == var4 && min_x == var5) {
+               int var2 = gB[var0[17] - 2]; //присвоить координату X из карты маршрута
+               var1 = gB[var0[17] - 1];     //присвоить координату Y из карты маршрута
+               
+               if(da[var3[0]][5] == 5 && da[var0[0]][5] != 5 || da[var3[0]][5] != 5 && da[var0[0]][5] == 5) {   //если воздух и земля или земля и воздух, значит присвоить координаты на том же гексе
                   var2 = var5;
                   var1 = var4;
                }
 
                if(var2 != 0) {
-                  var0[1] = var2;
-                  var0[2] = var1;
+                  var0[1] = var2; //запись координаты X
+                  var0[2] = var1; //запись координаты Y
                }
-
+    }
+    
                dA = var0;
                fA = var3;
                var3[23] = 1;
@@ -4485,7 +4543,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
             }
          }
 
-         if(var3 == null) {
+         if(var3 == null) { //если врага нет
             if(HG.D(5)) {
                var0[3] = 0;
                var0[4] = 0;
@@ -4563,7 +4621,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
          }
       }
 
-      return 0;
+      return 0; //нет врага
    }
 
    static int I(int[] var0) {
@@ -4608,7 +4666,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
 
       return 0;
    }
-
+//???
    static int D(int[] var0, int[] var1) {
       int var8 = Integer.MIN_VALUE;
       int var7 = -1;
@@ -4664,7 +4722,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
 
       return -1;
    }
-
+//???
    static int E(int[] var0, int[] var1) {
       int var6 = 0;
       int var5 = -1;
@@ -4717,7 +4775,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
 
       return -1;
    }
-
+//???
    static int J(int[] var0) {
       int var6 = -1;
       int var5 = -1;
@@ -5301,7 +5359,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
 
       return var2 <= da[var0[0]][19] + var3?1:-1;
    }
-
+//------ Сравнение на совпадение двух юнитов при движении
    static int H(int[] var0, int[] var1) {
       if(var0 != null && var1 != null) {
          int var3 = B(var0[1], var0[2], var1[1], var1[2]);
@@ -5814,7 +5872,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
       }
 
    }
-
+//------ Вывод оформления всплывающего окна
    static int A(Graphics var0, int var1, int var2, int var3) {
       int var9 = var2;
       int var5 = HG.ob[18][4] << 1;
@@ -6894,12 +6952,12 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
             switch(lB[var1][0]) {
             case 0:
                if(lB[var1][9] <= 5) {
-                  A(var0, 30, 1, lB[var1][4], lB[var1][5]);
+                  A(var0, 30, 1, lB[var1][4], lB[var1][5]);   //вывод значка кружка при атаке
                }
                break;
             case 1:
                if(lB[var1][9] <= 5) {
-                  A(var0, 30, 0, lB[var1][4], lB[var1][5]);
+                  A(var0, 30, 0, lB[var1][4], lB[var1][5]);   //вывод значка прицела при атаке
                }
                break;
             case 2:
@@ -7380,7 +7438,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
                A(var1, 3);    //вывод юнитов на карту
                D(var1);     //вывод флагов нации на карту
                if(kB) {
-                  G(var1);
+                  G(var1);  //вывод значков при перемещении юнита
                }
 
                H(var1); //разные линии на карту
@@ -7406,7 +7464,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
 
                D(var1);     //вывод флагов нации на карту
                if(kB) {
-                  G(var1);
+                  G(var1);  //вывод значков при атаке  юнита
                }
 
                H(var1); //разные линии на карту
@@ -7437,7 +7495,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
                B(var1, la, ma, -23, -16);   //местность на карту
                F(var1);
                if(kB) {
-                  G(var1);
+                  G(var1);  //вывод значков при атаке или перемещении юнита
                }
 
                A(var1, 3);  //вывод юнитов на карту
@@ -7618,7 +7676,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
                   }
                   break;
                case 17:
-               case 18:
+               case 18: //основной режим игры
                   var3 = false;
                   
                   if(C(5)) {    //нажата клавиша огонь //if(C(5)) {
