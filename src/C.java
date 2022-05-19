@@ -18,7 +18,6 @@
 //FIXME: На названиях городов не выводятся координаты курсора
 //FIXME: Не подсвечивается красным противник в режиме хода (показ подсвеченных гексов возможного хода на карте)
 //FIXME: Когда противник рядом с юнитом не подсвечивается желтым пути движения
-//FIXME: Реализовать перехват во время движения, когда враг не виден (при движении мимо врага)
 //FIXME: При попадении во время дождя самолета в засаду происходит бой (не должнен быть бой во время дождя у самолетов)
 
 //ERROR: Не работает миссия Суэцкий канал в кампании Кампания Фашистского Блока
@@ -193,6 +192,8 @@ public class C extends Canvas implements Runnable {
    static int min_y2 = 0;
    static int curs_x = 0;
    static int curs_y = 0;
+   static int way_x = 0;
+   static int way_y = 0;
    static boolean buld = false;
    static int key = 0;
    static int offset_x = 0;
@@ -3956,6 +3957,8 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
    static final void A(int[] var_Unit, int var_X, int var_Y) {  //построение пути перемещения: юнит, координата X, координата Y
       int var_X1 = var_Unit[1];   //координата X начальная юнита
       int var_Y1 = var_Unit[2];   //координата Y начальная юнита
+      way_x = var_X;
+      way_y = var_Y;
       hB = 0;
       int var11 = 0;    //счетчик
       iB = 0;
@@ -4486,7 +4489,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
             int var7;
             int var13;
             int var12 = 0;
-            if(min_y != var4 && min_x != var5) {  //если конечная точка, то не будет засады
+            if(way_y != var4 && way_x != var5) {  //если конечная точка, то не будет засады
                 if(vb4[var4][var5] == 4 && da[var0[0]][5] == 5 || vb3[var4][var5] == 4 && da[var0[0]][5] != 5) {
                     for(int var11 = 0; var11 < var10.length; ++var11) {
                         var6 = var10[var11][1];    //координата X юнита (не сравниваемого юнита)
@@ -4514,7 +4517,7 @@ if(!HG.fb && !HG.ta && !HG.popup_menu && sens_x != sens_x2 && sens_y != sens_y2)
                   var0[16] = 1;
                }
                
-    if(vb4[var4][var5] != 4 && da[var0[0]][5] == 5 || vb3[var4][var5] != 4 && da[var0[0]][5] != 5 || min_y == var4 && min_x == var5) {
+    if(vb4[var4][var5] != 4 && da[var0[0]][5] == 5 || vb3[var4][var5] != 4 && da[var0[0]][5] != 5 || way_y == var4 && way_x == var5) {
                int var2 = gB[var0[17] - 2]; //присвоить координату X из карты маршрута
                var1 = gB[var0[17] - 1];     //присвоить координату Y из карты маршрута
                
